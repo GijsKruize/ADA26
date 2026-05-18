@@ -53,8 +53,11 @@ for SERVICE in "${SERVICES[@]}"; do
   echo "Deploying $SERVICE..."
   IMAGE="${IMAGE_BASE}/${SERVICE}:latest"
   
-  # Frontend needs special env var API_GATEWAY_URL (will be updated later)
+  # Frontend needs special env var API_GATEWAY_URL (updated by 09_deploy_gateway.sh)
   if [ "$SERVICE" == "frontend" ]; then
+    # Try to get existing URL if possible
+    EXISTING_GW_URL=$(gcloud api-gateway gateways describe "$GATEWAY_ID" --location="${REGION}" --project="${PROJECT_ID}" --format='value(defaultHostname)' 2>/dev/null || echo "REPLACE_ME")
+    
     gcloud run deploy "$SERVICE" \
       --image "$IMAGE" \
       --region "$REGION" \
@@ -62,7 +65,7 @@ for SERVICE in "${SERVICES[@]}"; do
       --platform managed \
       --allow-unauthenticated \
       --port 80 \
-      --set-env-vars "API_GATEWAY_URL=https://REPLACE_ME"
+      --set-env-vars "API_GATEWAY_URL=https://${EXISTING_GW_URL}"
   else
     gcloud run deploy "$SERVICE" \
       --image "$IMAGE" \
