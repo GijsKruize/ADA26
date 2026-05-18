@@ -1,7 +1,7 @@
 import base64
 import json
 import logging
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, APIRouter
 from pydantic import BaseModel
 from typing import Optional
 
@@ -9,6 +9,7 @@ from .grader import grade_submission
 
 app = FastAPI(title="Auto-Grading Agent")
 logger = logging.getLogger(__name__)
+router = APIRouter(prefix="/api")
 
 class GradeSubmissionRequest(BaseModel):
     submission_id: str
@@ -17,7 +18,7 @@ class GradeSubmissionRequest(BaseModel):
 def health():
     return {"status": "ok", "agent": "auto-grading-agent"}
 
-@app.post("/agent/grade-submission")
+@router.post("/agent/grade-submission")
 async def handle_grade_submission(request: GradeSubmissionRequest, background_tasks: BackgroundTasks):
     """
     Direct endpoint to trigger grading for a submission.
@@ -34,7 +35,7 @@ async def handle_grade_submission(request: GradeSubmissionRequest, background_ta
         logger.error(f"Error grading submission {request.submission_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/pubsub/submission-created")
+@router.post("/pubsub/submission-created")
 async def handle_submission_created_push(request: Request, background_tasks: BackgroundTasks):
     """
     Endpoint for Google Cloud Pub/Sub Push subscriptions.
@@ -73,6 +74,8 @@ async def handle_submission_created_push(request: Request, background_tasks: Bac
         # but here it might be better to return 500 if we want a retry.
         # Given this is an assignment, let's just log and return 200 to acknowledge.
         return {"status": "error", "detail": str(e)}
+
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn

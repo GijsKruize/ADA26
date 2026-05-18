@@ -35,12 +35,14 @@ echo "Adding module..."
 MODULE_RES=$(curl -s -X POST "${API_GATEWAY_URL}/api/courses/${COURSE_ID}/modules" \
   -H "Content-Type: application/json" \
   -H "$AUTH_HEADER" \
-  -d '{
-    "title": "Event-Driven Microservices",
-    "learning_objectives": ["Explain Pub/Sub choreography", "Explain service boundaries"],
-    "order": 1
-  }')
+  -d "{
+    \"course_id\": \"$COURSE_ID\",
+    \"title\": \"Event-Driven Microservices\",
+    \"learning_objectives\": [\"Explain Pub/Sub choreography\", \"Explain service boundaries\"],
+    \"order\": 1
+  }")
 MODULE_ID=$(echo "$MODULE_RES" | python3 -c "import sys, json; print(json.load(sys.stdin)['module_id'])")
+echo "Module created: $MODULE_ID"
 
 # 3. Add Material
 echo "Adding material..."
@@ -48,6 +50,7 @@ curl -s -X POST "${API_GATEWAY_URL}/api/courses/${COURSE_ID}/materials" \
   -H "Content-Type: application/json" \
   -H "$AUTH_HEADER" \
   -d "{
+    \"course_id\": \"$COURSE_ID\",
     \"module_id\": \"$MODULE_ID\",
     \"title\": \"Pub/Sub and Choreography Basics\",
     \"type\": \"reading\",
@@ -65,9 +68,9 @@ ASSIGNMENT_RES=$(curl -s -X POST "${API_GATEWAY_URL}/api/assignments" \
     \"title\": \"Explain Event-Driven Architecture\",
     \"instructions\": \"Explain how services communicate using events and why this improves loose coupling.\",
     \"rubric\": [
-      {\"name\": \"Event communication\", \"max_points\": 40, \"keywords\": [\"event\", \"publish\", \"subscribe\", \"pubsub\", \"message\"], \"concepts\": [\"pubsub\", \"event-driven architecture\"]},
-      {\"name\": \"Loose coupling\", \"max_points\": 40, \"keywords\": [\"loose coupling\", \"independent\", \"asynchronous\", \"decoupled\"], \"concepts\": [\"choreography\", \"microservices\"]},
-      {\"name\": \"Reliability\", \"max_points\": 20, \"keywords\": [\"retry\", \"failure\", \"resilience\", \"eventual consistency\"], \"concepts\": [\"resilience\"]}
+      {\"name\": \"Event communication\", \"description\": \"Checks for keywords related to Pub/Sub\", \"max_points\": 40, \"keywords\": [\"event\", \"publish\", \"subscribe\", \"pubsub\", \"message\"], \"concepts\": [\"pubsub\", \"event-driven architecture\"]},
+      {\"name\": \"Loose coupling\", \"description\": \"Checks for keywords related to decoupling\", \"max_points\": 40, \"keywords\": [\"loose coupling\", \"independent\", \"asynchronous\", \"decoupled\"], \"concepts\": [\"choreography\", \"microservices\"]},
+      {\"name\": \"Reliability\", \"description\": \"Checks for keywords related to resilience\", \"max_points\": 20, \"keywords\": [\"retry\", \"failure\", \"resilience\", \"eventual consistency\"], \"concepts\": [\"resilience\"]}
     ]
   }")
 ASSIGNMENT_ID=$(echo "$ASSIGNMENT_RES" | python3 -c "import sys, json; print(json.load(sys.stdin)['assignment_id'])")

@@ -80,12 +80,18 @@ async def grade_submission(submission_id: str) -> Dict[str, Any]:
     
     # 4. Record grade via MCP
     grade_payload = {
+        "submission_id": submission_id,
+        "assignment_id": assignment_id,
+        "course_id": assignment["course_id"],
+        "learner_id": submission["learner_id"],
         "score": grading_result["score"],
         "max_score": grading_result["max_score"],
         "feedback": grading_result["feedback"],
-        "mastered_concepts": grading_result["mastered_concepts"],
-        "weak_concepts": grading_result["weak_concepts"],
-        "graded_by": f"auto-grading-agent ({llm_provider})"
+        "criteria_scores": grading_result.get("criteria_scores", []),
+        "mastered_concepts": grading_result.get("mastered_concepts", []),
+        "weak_concepts": grading_result.get("weak_concepts", []),
+        "graded_by": f"auto-grading-agent ({llm_provider})",
+        "trace": grading_result.get("trace", {"provider": llm_provider})
     }
     await record_grade(submission_id, grade_payload)
     

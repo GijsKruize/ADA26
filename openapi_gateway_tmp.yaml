@@ -10,7 +10,7 @@ paths:
     post:
       operationId: "createCourse"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -24,7 +24,7 @@ paths:
           required: true
           type: "string"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -38,7 +38,7 @@ paths:
     post:
       operationId: "addModule"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -46,7 +46,7 @@ paths:
     get:
       operationId: "listModules"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -60,7 +60,7 @@ paths:
     post:
       operationId: "addMaterial"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -68,7 +68,7 @@ paths:
     get:
       operationId: "listMaterials"
       x-google-backend:
-        address: "COURSE_SERVICE_URL/"
+        address: "https://course-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -78,7 +78,7 @@ paths:
     post:
       operationId: "createAssignment"
       x-google-backend:
-        address: "ASSESSMENT_SERVICE_URL/"
+        address: "https://assessment-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -92,7 +92,7 @@ paths:
           required: true
           type: "string"
       x-google-backend:
-        address: "ASSESSMENT_SERVICE_URL/"
+        address: "https://assessment-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -102,7 +102,7 @@ paths:
     post:
       operationId: "submitAnswer"
       x-google-backend:
-        address: "ASSESSMENT_SERVICE_URL/"
+        address: "https://assessment-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -116,7 +116,7 @@ paths:
           required: true
           type: "string"
       x-google-backend:
-        address: "ASSESSMENT_SERVICE_URL/"
+        address: "https://assessment-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -130,7 +130,7 @@ paths:
           required: true
           type: "string"
       x-google-backend:
-        address: "ASSESSMENT_SERVICE_URL/"
+        address: "https://assessment-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -145,7 +145,7 @@ paths:
           required: true
           type: "string"
       x-google-backend:
-        address: "LEARNING_PROFILE_SERVICE_URL/"
+        address: "https://learning-profile-service-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -155,7 +155,7 @@ paths:
     post:
       operationId: "recommend"
       x-google-backend:
-        address: "RECOMMENDER_AGENT_URL/"
+        address: "https://recommender-agent-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
@@ -165,7 +165,7 @@ paths:
     post:
       operationId: "gradeSubmission"
       x-google-backend:
-        address: "AUTO_GRADING_AGENT_URL/"
+        address: "https://auto-grading-agent-p2nkxa42qa-uc.a.run.app/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:

@@ -37,3 +37,6 @@ def setup_logging():
 
 # Initialize logging when the module is imported
 setup_logging()
+
+# Expose a default logger for other modules to use
+logger = logging.getLogger("learnsphere")

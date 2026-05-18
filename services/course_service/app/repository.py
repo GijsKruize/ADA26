@@ -19,13 +19,15 @@ def create_module(module: Module) -> Module:
     return module
 
 def list_modules(course_id: str) -> List[Module]:
-    docs = db.collection("modules").where("course_id", "==", course_id).order_by("order").stream()
-    return [Module(**doc.to_dict()) for doc in docs]
+    docs = db.collection("modules").where("course_id", "==", course_id).stream()
+    modules = [Module(**doc.to_dict()) for doc in docs]
+    return sorted(modules, key=lambda m: m.order)
 
 def create_material(material: Material) -> Material:
     db.collection("materials").document(material.material_id).set(material.dict())
     return material
 
 def list_materials(course_id: str) -> List[Material]:
-    docs = db.collection("materials").where("course_id", "==", course_id).order_by("order").stream()
-    return [Material(**doc.to_dict()) for doc in docs]
+    docs = db.collection("materials").where("course_id", "==", course_id).stream()
+    materials = [Material(**doc.to_dict()) for doc in docs]
+    return sorted(materials, key=lambda m: m.order)

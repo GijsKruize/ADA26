@@ -21,24 +21,22 @@ for SERVICE in "${SERVICES[@]}"; do
   echo "Building $SERVICE..."
   # Determine context directory
   case $SERVICE in
-    "course-service"|"assessment-service"|"learning-profile-service")
-      CONTEXT="services/$SERVICE"
-      ;;
-    "auto-grading-agent"|"recommender-agent")
-      CONTEXT="agents/$SERVICE"
-      ;;
-    "assessment-mcp-server"|"learning-course-mcp-server")
-      CONTEXT="mcp_servers/$SERVICE"
-      ;;
-    "frontend")
-      CONTEXT="frontend"
-      ;;
+    "course-service") CONTEXT="services/course_service" ;;
+    "assessment-service") CONTEXT="services/assessment_service" ;;
+    "learning-profile-service") CONTEXT="services/learning_profile_service" ;;
+    "auto-grading-agent") CONTEXT="agents/auto_grading_agent" ;;
+    "recommender-agent") CONTEXT="agents/recommender_agent" ;;
+    "assessment-mcp-server") CONTEXT="mcp_servers/assessment_mcp_server" ;;
+    "learning-course-mcp-server") CONTEXT="mcp_servers/learning_course_mcp_server" ;;
+    "frontend") CONTEXT="frontend" ;;
   esac
 
   IMAGE="${IMAGE_BASE}/${SERVICE}:latest"
   
-  # Use Cloud Build to build and push
-  gcloud builds submit "$CONTEXT" --tag "$IMAGE" --project="${PROJECT_ID}"
+  # Copy Dockerfile to root temporarily to allow Cloud Build to see shared/
+  cp "$CONTEXT/Dockerfile" ./Dockerfile
+  gcloud builds submit . --tag "$IMAGE" --project="${PROJECT_ID}"
+  rm ./Dockerfile
 done
 
 echo "Deploying Cloud Run services..."
@@ -63,7 +61,8 @@ for SERVICE in "${SERVICES[@]}"; do
       --project "${PROJECT_ID}" \
       --platform managed \
       --allow-unauthenticated \
-      --set-env-vars "API_GATEWAY_URL=REPLACE_ME"
+      --port 80 \
+      --set-env-vars "API_GATEWAY_URL=https://REPLACE_ME"
   else
     gcloud run deploy "$SERVICE" \
       --image "$IMAGE" \

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from typing import List, Optional
 from .models import LearningProfile, ProfileEvent, RecalculateResponse
 from .repository import ProfileRepository
@@ -8,12 +8,13 @@ from datetime import datetime
 
 app = FastAPI(title="Learning Profile Service")
 repo = ProfileRepository()
+router = APIRouter(prefix="/api")
 
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "service": "learning-profile-service"}
 
-@app.get("/profiles/{learner_id}", response_model=LearningProfile)
+@router.get("/profiles/{learner_id}", response_model=LearningProfile)
 async def get_profile(learner_id: str):
     profile = repo.get_profile(learner_id)
     if not profile:
@@ -29,7 +30,7 @@ async def get_profile(learner_id: str):
         repo.update_profile(profile)
     return profile
 
-@app.post("/profiles/{learner_id}/events")
+@router.post("/profiles/{learner_id}/events")
 async def inject_event(learner_id: str, event: ProfileEvent):
     logger.info(f"Injecting event for learner {learner_id}: {event.event_type}")
     # For demo purposes, we just merge the payload into the profile if it's a direct update,
@@ -37,7 +38,7 @@ async def inject_event(learner_id: str, event: ProfileEvent):
     repo.save_profile_data(learner_id, event.payload)
     return {"status": "event injected", "learner_id": learner_id}
 
-@app.post("/profiles/{learner_id}/recalculate", response_model=RecalculateResponse)
+@router.post("/profiles/{learner_id}/recalculate", response_model=RecalculateResponse)
 async def recalculate_profile(learner_id: str):
     logger.info(f"Forcing recalculation for learner {learner_id}")
     # In a real system, this might trigger a background job.
@@ -53,6 +54,8 @@ async def recalculate_profile(learner_id: str):
         status="success",
         message=f"Profile for {learner_id} has been recalculated (timestamp updated)."
     )
+
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn
