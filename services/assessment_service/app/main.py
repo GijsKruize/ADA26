@@ -1,9 +1,19 @@
 from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from .models import Assignment, Submission, Grade
 from . import repository
 from . import events
 
 app = FastAPI(title="Assessment Service")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 router = APIRouter(prefix="/api")
 
 @app.get("/health")

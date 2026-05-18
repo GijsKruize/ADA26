@@ -1,9 +1,19 @@
 from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from .models import RecommendRequest, RecommendResponse
 from .recommender import get_recommendations
 import uvicorn
 
 app = FastAPI(title="Recommender Agent")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 router = APIRouter(prefix="/api")
 
 @app.get("/health")

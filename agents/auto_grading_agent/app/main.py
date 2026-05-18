@@ -2,12 +2,22 @@ import base64
 import json
 import logging
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 
 from .grader import grade_submission
 
 app = FastAPI(title="Auto-Grading Agent")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api")
 

@@ -15,20 +15,58 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsCourses"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/courses/{course_id}:
+    parameters:
+      - name: "course_id"
+        in: "path"
+        required: true
+        type: "string"
     get:
       operationId: "getCourse"
-      parameters:
-        - name: "course_id"
-          in: "path"
-          required: true
-          type: "string"
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsCourseItem"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/courses/{course_id}/modules:
     parameters:
       - name: "course_id"
@@ -43,6 +81,9 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
     get:
       operationId: "listModules"
       x-google-backend:
@@ -51,6 +92,25 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsCourseModules"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/courses/{course_id}/materials:
     parameters:
       - name: "course_id"
@@ -65,6 +125,9 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
     get:
       operationId: "listMaterials"
       x-google-backend:
@@ -73,6 +136,24 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsCourseMaterials"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
 
   /api/assignments:
     post:
@@ -83,20 +164,57 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsAssignments"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/assignments/{assignment_id}:
+    parameters:
+      - name: "assignment_id"
+        in: "path"
+        required: true
+        type: "string"
     get:
       operationId: "getAssignment"
-      parameters:
-        - name: "assignment_id"
-          in: "path"
-          required: true
-          type: "string"
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsAssignmentItem"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
 
   /api/submissions:
     post:
@@ -107,49 +225,123 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsSubmissions"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/submissions/{submission_id}:
+    parameters:
+      - name: "submission_id"
+        in: "path"
+        required: true
+        type: "string"
     get:
       operationId: "getSubmission"
-      parameters:
-        - name: "submission_id"
-          in: "path"
-          required: true
-          type: "string"
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsSubmissionItem"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
+
   /api/submissions/{submission_id}/grade:
+    parameters:
+      - name: "submission_id"
+        in: "path"
+        required: true
+        type: "string"
     get:
       operationId: "getGrade"
-      parameters:
-        - name: "submission_id"
-          in: "path"
-          required: true
-          type: "string"
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsSubmissionGrade"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
 
   /api/profiles/{learner_id}:
+    parameters:
+      - name: "learner_id"
+        in: "path"
+        required: true
+        type: "string"
     get:
       operationId: "getProfile"
-      parameters:
-        - name: "learner_id"
-          in: "path"
-          required: true
-          type: "string"
       x-google-backend:
         address: "LEARNING_PROFILE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsProfileItem"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "LEARNING_PROFILE_SERVICE_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
 
   /api/agent/recommend:
     post:
@@ -160,6 +352,24 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsRecommend"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "RECOMMENDER_AGENT_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS
 
   /api/agent/grade-submission:
     post:
@@ -170,3 +380,21 @@ paths:
       responses:
         200:
           description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+    options:
+      operationId: "corsGradeSubmission"
+      responses:
+        200:
+          description: "OK"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-google-backend:
+        address: "AUTO_GRADING_AGENT_URL/"
+        path_translation: APPEND_PATH_TO_ADDRESS

@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from .models import LearningProfile, ProfileEvent, RecalculateResponse
 from .repository import ProfileRepository
@@ -7,6 +8,15 @@ from shared.settings import settings
 from datetime import datetime
 
 app = FastAPI(title="Learning Profile Service")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 repo = ProfileRepository()
 router = APIRouter(prefix="/api")
 
