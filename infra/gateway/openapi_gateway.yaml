@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  title: "LearnSphere API Gateway"
+  description: "Unified entry point for LearnSphere services"
+  version: "1.0.0"
+schemes:
+  - "https"
+paths:
+  /api/courses:
+    post:
+      operationId: "createCourse"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses"
+      responses:
+        200:
+          description: "OK"
+  /api/courses/{course_id}:
+    get:
+      operationId: "getCourse"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses/{course_id}"
+      responses:
+        200:
+          description: "OK"
+  /api/courses/{course_id}/modules:
+    post:
+      operationId: "addModule"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses/{course_id}/modules"
+      responses:
+        200:
+          description: "OK"
+    get:
+      operationId: "listModules"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses/{course_id}/modules"
+      responses:
+        200:
+          description: "OK"
+  /api/courses/{course_id}/materials:
+    post:
+      operationId: "addMaterial"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses/{course_id}/materials"
+      responses:
+        200:
+          description: "OK"
+    get:
+      operationId: "listMaterials"
+      x-google-backend:
+        address: "COURSE_SERVICE_URL/courses/{course_id}/materials"
+      responses:
+        200:
+          description: "OK"
+
+  /api/assignments:
+    post:
+      operationId: "createAssignment"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/assignments"
+      responses:
+        200:
+          description: "OK"
+  /api/assignments/{assignment_id}:
+    get:
+      operationId: "getAssignment"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/assignments/{assignment_id}"
+      responses:
+        200:
+          description: "OK"
+
+  /api/submissions:
+    post:
+      operationId: "submitAnswer"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/submissions"
+      responses:
+        200:
+          description: "OK"
+  /api/submissions/{submission_id}:
+    get:
+      operationId: "getSubmission"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/submissions/{submission_id}"
+      responses:
+        200:
+          description: "OK"
+  /api/submissions/{submission_id}/grade:
+    get:
+      operationId: "getGrade"
+      x-google-backend:
+        address: "ASSESSMENT_SERVICE_URL/submissions/{submission_id}/grade"
+      responses:
+        200:
+          description: "OK"
+
+  /api/profiles/{learner_id}:
+    get:
+      operationId: "getProfile"
+      x-google-backend:
+        address: "LEARNING_PROFILE_SERVICE_URL/profiles/{learner_id}"
+      responses:
+        200:
+          description: "OK"
+
+  /api/agent/recommend:
+    post:
+      operationId: "recommend"
+      x-google-backend:
+        address: "RECOMMENDER_AGENT_URL/agent/recommend"
+      responses:
+        200:
+          description: "OK"
+
+  /api/agent/grade-submission:
+    post:
+      operationId: "gradeSubmission"
+      x-google-backend:
+        address: "AUTO_GRADING_AGENT_URL/agent/grade-submission"
+      responses:
+        200:
+          description: "OK"
+
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+
+security:
+  - api_key: []

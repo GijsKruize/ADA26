@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+pydantic
+pydantic-settings
+google-cloud-firestore
+google-cloud-pubsub
+requests
+python-multipart

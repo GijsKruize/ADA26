@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "timeout": "30s",
+  "cache_ttl": "300s",
+  "port": 8080,
+  "endpoints": [
+    {
+      "endpoint": "/api/courses",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/courses",
+          "host": ["COURSE_SERVICE_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/courses/{course_id}",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/courses/{course_id}",
+          "host": ["COURSE_SERVICE_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/assignments",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/assignments",
+          "host": ["ASSESSMENT_SERVICE_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/submissions",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/submissions",
+          "host": ["ASSESSMENT_SERVICE_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/profiles/{learner_id}",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/profiles/{learner_id}",
+          "host": ["LEARNING_PROFILE_SERVICE_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/agent/recommend",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/agent/recommend",
+          "host": ["RECOMMENDER_AGENT_URL"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/agent/grade-submission",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/agent/grade-submission",
+          "host": ["AUTO_GRADING_AGENT_URL"]
+        }
+      ]
+    }
+  ]
+}

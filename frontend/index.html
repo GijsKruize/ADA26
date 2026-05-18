@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnSphere Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+</head>
+<body>
+    <header>
+        <h1>LearnSphere Adaptive Learning Demo</h1>
+    </header>
+
+    <main>
+        <section id="setup">
+            <h2>1. Course Setup</h2>
+            <div class="form-group">
+                <button id="btn-create-course">Create Course</button>
+                <span id="course-status" class="status"></span>
+            </div>
+            <div class="form-group">
+                <button id="btn-add-module" disabled>Add Module</button>
+                <span id="module-status" class="status"></span>
+            </div>
+            <div class="form-group">
+                <button id="btn-add-material" disabled>Add Material</button>
+                <span id="material-status" class="status"></span>
+            </div>
+        </section>
+
+        <section id="assessment">
+            <h2>2. Assessment</h2>
+            <div class="form-group">
+                <button id="btn-create-assignment" disabled>Create Assignment</button>
+                <span id="assignment-status" class="status"></span>
+            </div>
+            <div class="form-group">
+                <textarea id="answer-text" placeholder="Enter student answer here..." disabled>In an event-driven architecture, services publish events when something important happens. Other services subscribe to those messages through a Pub/Sub system. This means the sender does not need to know who receives the event. The services become more independent and decoupled. Communication is asynchronous, so one service can continue even if another service is temporarily unavailable. This improves loose coupling and supports microservices. With retries and eventual consistency, the system can also become more resilient to failure.</textarea>
+                <button id="btn-submit-answer" disabled>Submit Answer</button>
+                <span id="submission-status" class="status"></span>
+            </div>
+        </section>
+
+        <section id="grading">
+            <h2>3. Grading & Adaptive Feedback</h2>
+            <div class="form-group">
+                <button id="btn-trigger-grading" disabled>Trigger Auto-Grading</button>
+                <span id="grading-status" class="status"></span>
+            </div>
+            <div class="result-box" id="grade-result"></div>
+        </section>
+
+        <section id="adaptive">
+            <h2>4. Learner Profile & Recommendation</h2>
+            <div class="form-group">
+                <button id="btn-fetch-profile" disabled>Fetch Learner Profile</button>
+                <span id="profile-status" class="status"></span>
+            </div>
+            <div class="result-box" id="profile-result"></div>
+            <div class="form-group">
+                <button id="btn-get-recommendation" disabled>Get Recommendation</button>
+                <span id="recommendation-status" class="status"></span>
+            </div>
+            <div class="result-box" id="recommendation-result"></div>
+        </section>
+
+        <section id="notifications">
+            <h2>5. Notifications</h2>
+            <div class="form-group">
+                <button id="btn-fetch-notifications">Fetch Notifications</button>
+                <span id="notification-status" class="status"></span>
+            </div>
+            <div class="result-box" id="notification-list"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>LearnSphere Assignment 2 — Phase 4 Implementation</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

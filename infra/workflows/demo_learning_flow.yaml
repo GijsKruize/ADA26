@@ -1,0 +1,152 @@
+main:
+  params: [args]
+  steps:
+    - init:
+        assign:
+          - learner_id: ${default(map.get(args, "learner_id"), "demo-learner-123")}
+          - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+          - region: ${sys.get_env("GOOGLE_CLOUD_LOCATION")}
+          - course_service_url: ${args.course_service_url}
+          - assessment_service_url: ${args.assessment_service_url}
+          - learning_profile_service_url: ${args.learning_profile_service_url}
+          - auto_grading_agent_url: ${args.auto_grading_agent_url}
+          - recommender_agent_url: ${args.recommender_agent_url}
+
+    - create_course:
+        call: http.post
+        args:
+          url: ${course_service_url + "/courses"}
+          body:
+            title: "Introduction to Data Architecture"
+            description: "Learn about EDA, microservices, and data products."
+            learning_objectives: ["Understand event-driven architecture", "Understand microservices", "Understand data products"]
+        result: course_res
+
+    - add_module:
+        call: http.post
+        args:
+          url: ${course_service_url + "/courses/" + course_res.body.course_id + "/modules"}
+          body:
+            title: "Event-Driven Microservices"
+            learning_objectives: ["Explain Pub/Sub choreography", "Explain service boundaries"]
+            order: 1
+        result: module_res
+
+    - add_material:
+        call: http.post
+        args:
+          url: ${course_service_url + "/courses/" + course_res.body.course_id + "/materials"}
+          body:
+            module_id: ${module_res.body.module_id}
+            title: "Pub/Sub and Choreography Basics"
+            type: "reading"
+            concepts: ["pubsub", "choreography", "event-driven architecture"]
+            order: 1
+        result: material_res
+
+    - create_assignment:
+        call: http.post
+        args:
+          url: ${assessment_service_url + "/assignments"}
+          body:
+            course_id: ${course_res.body.course_id}
+            title: "Explain Event-Driven Architecture"
+            instructions: "Explain how services communicate using events and why this improves loose coupling."
+            rubric:
+              - name: "Event communication"
+                max_points: 40
+                keywords: ["event", "publish", "subscribe", "pubsub", "message"]
+                concepts: ["pubsub", "event-driven architecture"]
+              - name: "Loose coupling"
+                max_points: 40
+                keywords: ["loose coupling", "independent", "asynchronous", "decoupled"]
+                concepts: ["choreography", "microservices"]
+              - name: "Reliability"
+                max_points: 20
+                keywords: ["retry", "failure", "resilience", "eventual consistency"]
+                concepts: ["resilience"]
+        result: assignment_res
+
+    - submit_answer:
+        call: http.post
+        args:
+          url: ${assessment_service_url + "/submissions"}
+          body:
+            assignment_id: ${assignment_res.body.assignment_id}
+            learner_id: ${learner_id}
+            answer_text: "In an event-driven architecture, services publish events when something important happens. Other services subscribe to those messages through a Pub/Sub system. This means the sender does not need to know who receives the event. The services become more independent and decoupled. Communication is asynchronous, so one service can continue even if another service is temporarily unavailable. This improves loose coupling and supports microservices. With retries and eventual consistency, the system can also become more resilient to failure."
+        result: submission_res
+
+    - trigger_grading:
+        call: http.post
+        args:
+          url: ${auto_grading_agent_url + "/agent/grade-submission"}
+          body:
+            submission_id: ${submission_res.body.submission_id}
+        result: grading_trigger_res
+
+    - poll_grade:
+        assign:
+          - attempts: 0
+          - max_attempts: 10
+          - grade: null
+    - check_grade:
+        switch:
+          - condition: ${attempts < max_attempts}
+            steps:
+              - get_grade:
+                  try:
+                    call: http.get
+                    args:
+                      url: ${assessment_service_url + "/submissions/" + submission_res.body.submission_id + "/grade"}
+                    result: grade_res
+                  retry:
+                    predicate: ${http.default_retry_predicate}
+                    max_retries: 5
+                    backoff:
+                      initial_delay: 1
+                      max_delay: 5
+                      multiplier: 2
+              - set_grade:
+                  assign:
+                    - grade: ${grade_res.body}
+              - grade_exists:
+                  switch:
+                    - condition: ${grade != null and grade.grade_id != null}
+                      next: get_profile
+              - wait_and_retry:
+                  call: sys.sleep
+                  args:
+                    seconds: 3
+              - increment_attempts:
+                  assign:
+                    - attempts: ${attempts + 1}
+                  next: check_grade
+          - condition: true
+            next: get_profile
+
+    - get_profile:
+        call: http.get
+        args:
+          url: ${learning_profile_service_url + "/profiles/" + learner_id}
+        result: profile_res
+
+    - get_recommendation:
+        call: http.post
+        args:
+          url: ${recommender_agent_url + "/agent/recommend"}
+          body:
+            learner_id: ${learner_id}
+            course_id: ${course_res.body.course_id}
+        result: recommendation_res
+
+    - return_result:
+        return:
+          course: ${course_res.body}
+          module: ${module_res.body}
+          material: ${material_res.body}
+          assignment: ${assignment_res.body}
+          submission: ${submission_res.body}
+          grade: ${grade}
+          learner_profile: ${profile_res.body}
+          recommendation: ${recommendation_res.body}
