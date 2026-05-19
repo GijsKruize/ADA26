@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     LEARNING_COURSE_MCP_SERVER_URL: str = "http://localhost:8007"
     
     OLLAMA_BASE_URL: Optional[str] = "http://localhost:11434"
-    OLLAMA_MODEL: str = "llama3.1"
+    OLLAMA_MODEL: str = "qwen2.5:7b"
     
     PUBSUB_TOPIC_COURSE_EVENTS: str = "course-events"
     PUBSUB_TOPIC_ASSIGNMENT_CREATED: str = "assignment-created"

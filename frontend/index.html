@@ -14,16 +14,40 @@
 
     <main>
         <section id="setup">
+            <h2>0. Learner Setup</h2>
+            <div class="form-group">
+                <label for="learner-id">Learner ID:</label>
+                <input type="text" id="learner-id" value="student_123">
+                <label for="learner-name">Learner Name:</label>
+                <input type="text" id="learner-name" value="Alice Smith">
+            </div>
+
             <h2>1. Course Setup</h2>
             <div class="form-group">
+                <label for="course-name">Course Name:</label>
+                <input type="text" id="course-name" value="IntroDataArch">
+                <label for="course-title">Course Title:</label>
+                <input type="text" id="course-title" value="Introduction to Data Architecture">
+                <label for="course-desc">Description:</label>
+                <textarea id="course-desc">Learn about EDA, microservices, and data products.</textarea>
                 <button id="btn-create-course">Create Course</button>
                 <span id="course-status" class="status"></span>
             </div>
             <div class="form-group">
+                <label for="module-name">Module Name:</label>
+                <input type="text" id="module-name" value="EDM" disabled>
+                <label for="module-title">Module Title:</label>
+                <input type="text" id="module-title" value="Event-Driven Microservices" disabled>
                 <button id="btn-add-module" disabled>Add Module</button>
                 <span id="module-status" class="status"></span>
             </div>
             <div class="form-group">
+                <label for="material-name">Material Name:</label>
+                <input type="text" id="material-name" value="PubSubBasics" disabled>
+                <label for="material-title">Material Title:</label>
+                <input type="text" id="material-title" value="Pub/Sub and Choreography Basics" disabled>
+                <label for="material-concepts">Concepts (comma separated):</label>
+                <input type="text" id="material-concepts" value="pubsub, choreography, event-driven architecture" disabled>
                 <button id="btn-add-material" disabled>Add Material</button>
                 <span id="material-status" class="status"></span>
             </div>
@@ -32,10 +56,17 @@
         <section id="assessment">
             <h2>2. Assessment</h2>
             <div class="form-group">
+                <label for="assignment-name">Assignment Name:</label>
+                <input type="text" id="assignment-name" value="EDAExplain" disabled>
+                <label for="assignment-title">Assignment Title:</label>
+                <input type="text" id="assignment-title" value="Explain Event-Driven Architecture" disabled>
+                <label for="assignment-instr">Instructions:</label>
+                <textarea id="assignment-instr" disabled>Explain how services communicate using events and why this improves loose coupling.</textarea>
                 <button id="btn-create-assignment" disabled>Create Assignment</button>
                 <span id="assignment-status" class="status"></span>
             </div>
             <div class="form-group">
+                <label for="answer-text">Student Answer:</label>
                 <textarea id="answer-text" placeholder="Enter student answer here..." disabled>In an event-driven architecture, services publish events when something important happens. Other services subscribe to those messages through a Pub/Sub system. This means the sender does not need to know who receives the event. The services become more independent and decoupled. Communication is asynchronous, so one service can continue even if another service is temporarily unavailable. This improves loose coupling and supports microservices. With retries and eventual consistency, the system can also become more resilient to failure.</textarea>
                 <button id="btn-submit-answer" disabled>Submit Answer</button>
                 <span id="submission-status" class="status"></span>

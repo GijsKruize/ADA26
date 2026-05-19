@@ -188,6 +188,7 @@ Deploy the infrastructure using the provided scripts in `infra/gcloud/` in the f
 8.  `./infra/gcloud/07_create_pubsub_push_subscriptions.sh`: Configure push triggers for the grading agent.
 9.  `./infra/gcloud/08_deploy_workflow.sh`: Deploy the Google Workflow orchestration.
 10. `./infra/gcloud/09_deploy_gateway.sh`: Deploy the API Gateway.
+11. `./infra/gcloud/10_update_urls.sh`: Finalize cross-service URL configuration in Cloud Run.
 
 ## 16. Demo script instructions
 
@@ -207,6 +208,7 @@ To trigger the orchestrated demo flow in Google Workflows:
 -   **Identity:** `X-Demo-User` header is used to simulate different learners without a full auth provider.
 -   **Persistence:** Firestore is used in Datastore mode or Native mode with the `(default)` database.
 -   **LLM Availability:** The system assumes Ollama might be unavailable and provides a robust deterministic fallback based on keyword matching and length heuristics.
+-   **MCP Protocol:** The MCP servers use a custom HTTP REST protocol (`POST /tools/execute`) for simplicity rather than the standard JSON-RPC MCP wire protocol.
 
 ## 19. Known limitations
 

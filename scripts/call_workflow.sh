@@ -14,11 +14,11 @@ fi
 
 # Get service URLs to pass to the workflow
 echo "Getting service URLs..."
-COURSE_URL=$(gcloud run services describe course-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')
-ASSESSMENT_URL=$(gcloud run services describe assessment-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')
-PROFILE_URL=$(gcloud run services describe learning-profile-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')
-GRADER_URL=$(gcloud run services describe auto-grading-agent --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')
-RECOMMENDER_URL=$(gcloud run services describe recommender-agent --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')
+COURSE_URL=$(gcloud run services describe course-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')/api
+ASSESSMENT_URL=$(gcloud run services describe assessment-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')/api
+PROFILE_URL=$(gcloud run services describe learning-profile-service --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')/api
+GRADER_URL=$(gcloud run services describe auto-grading-agent --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')/api
+RECOMMENDER_URL=$(gcloud run services describe recommender-agent --platform managed --region "${REGION}" --project "${PROJECT_ID}" --format 'value(status.url)')/api
 
 DATA=$(cat <<EOF
 {

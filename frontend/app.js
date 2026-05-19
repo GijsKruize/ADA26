@@ -6,21 +6,28 @@ let state = {
     module_id: null,
     material_id: null,
     assignment_id: null,
-    submission_id: null,
-    learner_id: 'student_123'
+    submission_id: null
 };
 
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${DEMO_TOKEN}`,
-    'X-Demo-User': state.learner_id
-};
+function getLearnerId() {
+    return document.getElementById('learner-id').value;
+}
+
+function getLearnerName() {
+    return document.getElementById('learner-name').value;
+}
+
+const DEMO_TOKEN = 'demo-token-123'; // Matches Settings.DEMO_API_TOKEN
 
 async function callApi(path, method = 'GET', body = null) {
     const url = `${API_BASE}${path}`;
     const options = {
         method,
-        headers
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${DEMO_TOKEN}`,
+            'X-Demo-User': getLearnerId()
+        }
     };
     if (body) {
         options.body = JSON.stringify(body);
@@ -50,14 +57,17 @@ document.getElementById('btn-create-course').onclick = async () => {
     try {
         setStatus('course-status', 'Creating...');
         const data = await callApi('/api/courses', 'POST', {
-            title: 'Introduction to Data Architecture',
-            description: 'Learn about modern data architectures.',
+            name: document.getElementById('course-name').value,
+            title: document.getElementById('course-title').value,
+            description: document.getElementById('course-desc').value,
             learning_objectives: ['Understand event-driven architecture', 'Understand microservices', 'Understand data products'],
             status: 'published'
         });
         state.course_id = data.course_id;
         setStatus('course-status', 'Success!', 'success');
         document.getElementById('btn-add-module').disabled = false;
+        document.getElementById('module-name').disabled = false;
+        document.getElementById('module-title').disabled = false;
     } catch (e) {
         setStatus('course-status', e.message, 'error');
     }
@@ -69,13 +79,17 @@ document.getElementById('btn-add-module').onclick = async () => {
         setStatus('module-status', 'Adding...');
         const data = await callApi(`/api/courses/${state.course_id}/modules`, 'POST', {
             course_id: state.course_id,
-            title: 'Event-Driven Microservices',
+            name: document.getElementById('module-name').value,
+            title: document.getElementById('module-title').value,
             learning_objectives: ['Explain Pub/Sub choreography', 'Explain service boundaries'],
             order: 1
         });
         state.module_id = data.module_id;
         setStatus('module-status', 'Success!', 'success');
         document.getElementById('btn-add-material').disabled = false;
+        document.getElementById('material-name').disabled = false;
+        document.getElementById('material-title').disabled = false;
+        document.getElementById('material-concepts').disabled = false;
     } catch (e) {
         setStatus('module-status', e.message, 'error');
     }
@@ -85,17 +99,22 @@ document.getElementById('btn-add-module').onclick = async () => {
 document.getElementById('btn-add-material').onclick = async () => {
     try {
         setStatus('material-status', 'Adding...');
+        const concepts = document.getElementById('material-concepts').value.split(',').map(s => s.trim());
         const data = await callApi(`/api/courses/${state.course_id}/materials`, 'POST', {
             module_id: state.module_id,
             course_id: state.course_id,
-            title: 'Pub/Sub and Choreography Basics',
+            name: document.getElementById('material-name').value,
+            title: document.getElementById('material-title').value,
             type: 'reading',
-            concepts: ['pubsub', 'choreography', 'event-driven architecture'],
+            concepts: concepts,
             order: 1
         });
         state.material_id = data.material_id;
         setStatus('material-status', 'Success!', 'success');
         document.getElementById('btn-create-assignment').disabled = false;
+        document.getElementById('assignment-name').disabled = false;
+        document.getElementById('assignment-title').disabled = false;
+        document.getElementById('assignment-instr').disabled = false;
     } catch (e) {
         setStatus('material-status', e.message, 'error');
     }
@@ -107,8 +126,9 @@ document.getElementById('btn-create-assignment').onclick = async () => {
         setStatus('assignment-status', 'Creating...');
         const data = await callApi('/api/assignments', 'POST', {
             course_id: state.course_id,
-            title: 'Explain Event-Driven Architecture',
-            instructions: 'Explain how services communicate using events and why this improves loose coupling.',
+            name: document.getElementById('assignment-name').value,
+            title: document.getElementById('assignment-title').value,
+            instructions: document.getElementById('assignment-instr').value,
             rubric: [
                 {
                     name: 'Event communication',
@@ -148,7 +168,7 @@ document.getElementById('btn-submit-answer').onclick = async () => {
         setStatus('submission-status', 'Submitting...');
         const data = await callApi('/api/submissions', 'POST', {
             assignment_id: state.assignment_id,
-            learner_id: state.learner_id,
+            learner_id: getLearnerId(),
             answer_text: document.getElementById('answer-text').value
         });
         state.submission_id = data.submission_id;
@@ -178,7 +198,7 @@ document.getElementById('btn-trigger-grading').onclick = async () => {
 document.getElementById('btn-fetch-profile').onclick = async () => {
     try {
         setStatus('profile-status', 'Fetching...');
-        const data = await callApi(`/api/profiles/${state.learner_id}`);
+        const data = await callApi(`/api/profiles/${getLearnerId()}`);
         displayResult('profile-result', data);
         setStatus('profile-status', 'Success!', 'success');
         document.getElementById('btn-get-recommendation').disabled = false;
@@ -192,7 +212,7 @@ document.getElementById('btn-get-recommendation').onclick = async () => {
     try {
         setStatus('recommendation-status', 'Getting...');
         const data = await callApi('/api/agent/recommend', 'POST', {
-            learner_id: state.learner_id,
+            learner_id: getLearnerId(),
             course_id: state.course_id
         });
         displayResult('recommendation-result', data);

@@ -5,6 +5,7 @@ import uuid
 
 class Course(BaseModel):
     course_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
     title: str
     description: str
     learning_objectives: List[str]
@@ -14,6 +15,7 @@ class Course(BaseModel):
 class Module(BaseModel):
     module_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     course_id: str
+    name: str
     title: str
     learning_objectives: List[str]
     order: int
@@ -23,6 +25,7 @@ class Material(BaseModel):
     material_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     course_id: str
     module_id: str
+    name: str
     title: str
     type: str  # reading|video|quiz|slides
     content_text: Optional[str] = None

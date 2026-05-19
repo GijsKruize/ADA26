@@ -12,6 +12,7 @@ def seed():
 
     # 1. Create Course
     course_data = {
+        "name": "IntroDataArch",
         "title": "Introduction to Data Architecture",
         "description": "Learn about EDA, microservices, and data products.",
         "learning_objectives": ["Understand event-driven architecture", "Understand microservices", "Understand data products"]
@@ -24,6 +25,7 @@ def seed():
 
     # 2. Add Module
     module_data = {
+        "name": "EDM",
         "title": "Event-Driven Microservices",
         "learning_objectives": ["Explain Pub/Sub choreography", "Explain service boundaries"],
         "order": 1
@@ -37,6 +39,7 @@ def seed():
     # 3. Add Material
     material_data = {
         "module_id": module_id,
+        "name": "PubSubBasics",
         "title": "Pub/Sub and Choreography Basics",
         "type": "reading",
         "concepts": ["pubsub", "choreography", "event-driven architecture"],
@@ -49,6 +52,7 @@ def seed():
     # 4. Create Assignment
     assignment_data = {
         "course_id": course_id,
+        "name": "EDAExplain",
         "title": "Explain Event-Driven Architecture",
         "instructions": "Explain how services communicate using events and why this improves loose coupling.",
         "rubric": [

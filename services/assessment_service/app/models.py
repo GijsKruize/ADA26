@@ -13,6 +13,7 @@ class RubricCriterion(BaseModel):
 class Assignment(BaseModel):
     assignment_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     course_id: str
+    name: str
     title: str
     instructions: str
     rubric: List[RubricCriterion]
