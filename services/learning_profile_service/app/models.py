@@ -13,7 +13,7 @@ class GradeHistoryEntry(BaseModel):
 
 class LearningProfile(BaseModel):
     learner_id: str
-    name: str
+    name: Optional[str] = "Demo Learner"
     mastered_concepts: Dict[str, float] = Field(default_factory=dict)
     weak_concepts: List[str] = Field(default_factory=list)
     grade_history: List[GradeHistoryEntry] = Field(default_factory=list)

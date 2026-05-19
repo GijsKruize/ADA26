@@ -1,0 +1,2148 @@
+Starting deployment sequence...
+Enabling Google Cloud APIs...
+Enabling run.googleapis.com...
+Enabling cloudfunctions.googleapis.com...
+Enabling cloudbuild.googleapis.com...
+Enabling artifactregistry.googleapis.com...
+Enabling pubsub.googleapis.com...
+Enabling firestore.googleapis.com...
+Enabling workflows.googleapis.com...
+Enabling eventarc.googleapis.com...
+Enabling storage.googleapis.com...
+Enabling apigateway.googleapis.com...
+APIs enabled successfully.
+Creating Artifact Registry repository: learnsphere-repo in us-central1...
+Repository learnsphere-repo already exists.
+Artifact Registry repository created successfully.
+Ensuring Firestore database exists...
+Firestore (default) database already exists.
+Firestore setup script completed.
+Creating Pub/Sub topics...
+Topic course-events already exists.
+Topic assignment-created already exists.
+Topic submission-created already exists.
+Topic submission-graded already exists.
+Pub/Sub topics created successfully.
+Creating Cloud Storage bucket: learnsphere-submissions-ada2026-488110 in us-central1...
+Bucket gs://learnsphere-submissions-ada2026-488110 already exists.
+Cloud Storage bucket created successfully.
+Building and pushing images...
+Building ollama...
+Image us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/ollama:latest already exists, skipping build.
+Building ai-proxy...
+Image us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/ai-proxy:latest already exists, skipping build.
+Building course-service...
+Creating temporary archive of 104 file(s) totalling 165.0 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.22.40.828947.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189760.913905-e1b51670c0674ca6a6f73821098839bf.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/329feab1-ec30-4bb0-bcc3-cc337be0ee84].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/329feab1-ec30-4bb0-bcc3-cc337be0ee84?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "329feab1-ec30-4bb0-bcc3-cc337be0ee84"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189760.913905-e1b51670c0674ca6a6f73821098839bf.tgz#1779189761736303
+Copying gs://ada2026-488110_cloudbuild/source/1779189760.913905-e1b51670c0674ca6a6f73821098839bf.tgz#1779189761736303...
+/ [0 files][    0.0 B/ 43.0 KiB]                                                / [1 files][ 43.0 KiB/ 43.0 KiB]                                                
+Operation completed over 1 objects/43.0 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  185.3kB
+Step 1/9 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Verifying Checksum
+6f92665ed17a: Download complete
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/9 : WORKDIR /app
+ ---> Running in 6cdece18b783
+Removing intermediate container 6cdece18b783
+ ---> cdb2f49e2d08
+Step 3/9 : COPY services/course_service/requirements.txt .
+ ---> 97ca47e67077
+Step 4/9 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 61aed2a98a34
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting pydantic (from -r requirements.txt (line 3))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 7.3 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 4))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting google-cloud-firestore (from -r requirements.txt (line 5))
+  Downloading google_cloud_firestore-2.27.0-py3-none-any.whl.metadata (10.0 kB)
+Collecting google-cloud-pubsub (from -r requirements.txt (line 6))
+  Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl.metadata (14 kB)
+Collecting python-multipart (from -r requirements.txt (line 7))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 3))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 3))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 4))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting google-api-core<3.0.0,>=2.11.0 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_auth-2.53.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting google-cloud-core<3.0.0,>=2.0.0 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_cloud_core-2.6.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting grpcio<2.0.0,>=1.33.2 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting grpc-google-iam-v1<1.0.0,>=0.14.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl.metadata (9.1 kB)
+Collecting grpcio-status>=1.33.2 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading grpcio_status-1.80.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting opentelemetry-api>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_api-1.42.0-py3-none-any.whl.metadata (1.4 kB)
+Collecting opentelemetry-sdk>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.63.2 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting requests<3.0.0,>=2.20.0 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting opentelemetry-semantic-conventions==0.63b0 (from opentelemetry-sdk>=1.27.0->google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl.metadata (2.4 kB)
+Collecting anyio<5,>=3.6.2 (from starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting charset_normalizer<4,>=2 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 181.5 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.26 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 87.4 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 240.5 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 34.0 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 125.0 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 224.2 MB/s eta 0:00:00
+Downloading google_cloud_firestore-2.27.0-py3-none-any.whl (429 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 429.8/429.8 kB 294.7 MB/s eta 0:00:00
+Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl (324 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 324.8/324.8 kB 279.7 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 254.7 MB/s eta 0:00:00
+Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.3/173.3 kB 170.7 MB/s eta 0:00:00
+Downloading google_auth-2.53.0-py3-none-any.whl (246 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 246.1/246.1 kB 279.3 MB/s eta 0:00:00
+Downloading google_cloud_core-2.6.0-py3-none-any.whl (29 kB)
+Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl (32 kB)
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 150.6 MB/s eta 0:00:00
+Downloading grpcio_status-1.80.0-py3-none-any.whl (14 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading opentelemetry_api-1.42.0-py3-none-any.whl (61 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.3/61.3 kB 226.8 MB/s eta 0:00:00
+Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl (170 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.9/170.9 kB 262.6 MB/s eta 0:00:00
+Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl (203 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 203.7/203.7 kB 272.9 MB/s eta 0:00:00
+Downloading proto_plus-1.28.0-py3-none-any.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 210.6 MB/s eta 0:00:00
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 286.7 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 225.5 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 210.3 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 236.8 MB/s eta 0:00:00
+Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 204.8 MB/s eta 0:00:00
+Downloading googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 300.6/300.6 kB 191.8 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 179.3 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 160.2 MB/s eta 0:00:00
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 277.5 MB/s eta 0:00:00
+Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 215.6/215.6 kB 268.9 MB/s eta 0:00:00
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 164.2 MB/s eta 0:00:00
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 206.3 MB/s eta 0:00:00
+Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 227.5 MB/s eta 0:00:00
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 245.3 MB/s eta 0:00:00
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 206.9 MB/s eta 0:00:00
+Installing collected packages: urllib3, typing-extensions, python-multipart, python-dotenv, pycparser, pyasn1, protobuf, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, pyasn1-modules, proto-plus, opentelemetry-api, grpcio, googleapis-common-protos, cffi, anyio, starlette, pydantic, opentelemetry-semantic-conventions, grpcio-status, cryptography, pydantic-settings, opentelemetry-sdk, grpc-google-iam-v1, google-auth, fastapi, google-api-core, google-cloud-core, google-cloud-pubsub, google-cloud-firestore
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 cffi-2.0.0 charset_normalizer-3.4.7 click-8.4.0 cryptography-48.0.0 fastapi-0.136.1 google-api-core-2.30.3 google-auth-2.53.0 google-cloud-core-2.6.0 google-cloud-firestore-2.27.0 google-cloud-pubsub-2.38.0 googleapis-common-protos-1.75.0 grpc-google-iam-v1-0.14.4 grpcio-1.80.0 grpcio-status-1.80.0 h11-0.16.0 idna-3.15 opentelemetry-api-1.42.0 opentelemetry-sdk-1.42.0 opentelemetry-semantic-conventions-0.63b0 proto-plus-1.28.0 protobuf-6.33.6 pyasn1-0.6.3 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 requests-2.34.2 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 61aed2a98a34
+ ---> 8a3f5926ce34
+Step 5/9 : COPY shared /app/shared
+ ---> 73d7986bdb3f
+Step 6/9 : COPY services/course_service/app /app/app
+ ---> 569c678404e8
+Step 7/9 : ENV PYTHONPATH=/app
+ ---> Running in 0446902a6785
+Removing intermediate container 0446902a6785
+ ---> d2a55172d079
+Step 8/9 : EXPOSE 8080
+ ---> Running in 147da9917cc0
+Removing intermediate container 147da9917cc0
+ ---> a39285767898
+Step 9/9 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in cce528a576de
+Removing intermediate container cce528a576de
+ ---> 20bbe3dd8f5d
+Successfully built 20bbe3dd8f5d
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/course-service:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/course-service:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/course-service]
+600e8bc9e24b: Preparing
+a7318b14ca9d: Preparing
+d90c365112e6: Preparing
+10b6392d8ffb: Preparing
+d71477b3dc76: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+799edc77eb3d: Layer already exists
+2e53cb234c59: Layer already exists
+94e760ec3074: Layer already exists
+a7318b14ca9d: Pushed
+10b6392d8ffb: Pushed
+600e8bc9e24b: Pushed
+d71477b3dc76: Pushed
+d90c365112e6: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:0569a735f5415561479cccde42f6bb5481f8c2a6042df1eba7a334f2c52b56ac size: 2201
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                        IMAGES                                                                               STATUS
+329feab1-ec30-4bb0-bcc3-cc337be0ee84  2026-05-19T11:22:45+00:00  33S       gs://ada2026-488110_cloudbuild/source/1779189760.913905-e1b51670c0674ca6a6f73821098839bf.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/course-service (+1 more)  SUCCESS
+Building assessment-service...
+Creating temporary archive of 104 file(s) totalling 185.9 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.23.24.030119.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189804.11485-3d9845d74c2e4307bdf5cd010a9f6f61.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/e9b443a1-9f29-4ca0-a91a-203d1e3b7000].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/e9b443a1-9f29-4ca0-a91a-203d1e3b7000?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "e9b443a1-9f29-4ca0-a91a-203d1e3b7000"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189804.11485-3d9845d74c2e4307bdf5cd010a9f6f61.tgz#1779189804859783
+Copying gs://ada2026-488110_cloudbuild/source/1779189804.11485-3d9845d74c2e4307bdf5cd010a9f6f61.tgz#1779189804859783...
+/ [0 files][    0.0 B/ 46.9 KiB]                                                / [1 files][ 46.9 KiB/ 46.9 KiB]                                                
+Operation completed over 1 objects/46.9 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  206.3kB
+Step 1/9 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Verifying Checksum
+6f92665ed17a: Download complete
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/9 : WORKDIR /app
+ ---> Running in 6120a9bda47f
+Removing intermediate container 6120a9bda47f
+ ---> 57e15690fde8
+Step 3/9 : COPY services/assessment_service/requirements.txt .
+ ---> 442deac715d8
+Step 4/9 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 6a25e42d0353
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting pydantic (from -r requirements.txt (line 3))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 7.8 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 4))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting google-cloud-firestore (from -r requirements.txt (line 5))
+  Downloading google_cloud_firestore-2.27.0-py3-none-any.whl.metadata (10.0 kB)
+Collecting google-cloud-pubsub (from -r requirements.txt (line 6))
+  Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl.metadata (14 kB)
+Collecting python-multipart (from -r requirements.txt (line 7))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 3))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 3))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 4))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting google-api-core<3.0.0,>=2.11.0 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_auth-2.53.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting google-cloud-core<3.0.0,>=2.0.0 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_cloud_core-2.6.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting grpcio<2.0.0,>=1.33.2 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting grpc-google-iam-v1<1.0.0,>=0.14.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl.metadata (9.1 kB)
+Collecting grpcio-status>=1.33.2 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading grpcio_status-1.80.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting opentelemetry-api>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_api-1.42.0-py3-none-any.whl.metadata (1.4 kB)
+Collecting opentelemetry-sdk>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.63.2 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting requests<3.0.0,>=2.20.0 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting opentelemetry-semantic-conventions==0.63b0 (from opentelemetry-sdk>=1.27.0->google-cloud-pubsub->-r requirements.txt (line 6))
+  Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl.metadata (2.4 kB)
+Collecting anyio<5,>=3.6.2 (from starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting charset_normalizer<4,>=2 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 202.7 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.26 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 108.0 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 236.4 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 33.8 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 128.7 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 240.2 MB/s eta 0:00:00
+Downloading google_cloud_firestore-2.27.0-py3-none-any.whl (429 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 429.8/429.8 kB 263.1 MB/s eta 0:00:00
+Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl (324 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 324.8/324.8 kB 229.3 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 273.2 MB/s eta 0:00:00
+Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.3/173.3 kB 295.8 MB/s eta 0:00:00
+Downloading google_auth-2.53.0-py3-none-any.whl (246 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 246.1/246.1 kB 303.8 MB/s eta 0:00:00
+Downloading google_cloud_core-2.6.0-py3-none-any.whl (29 kB)
+Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl (32 kB)
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 249.2 MB/s eta 0:00:00
+Downloading grpcio_status-1.80.0-py3-none-any.whl (14 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading opentelemetry_api-1.42.0-py3-none-any.whl (61 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.3/61.3 kB 230.7 MB/s eta 0:00:00
+Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl (170 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.9/170.9 kB 158.7 MB/s eta 0:00:00
+Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl (203 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 203.7/203.7 kB 256.3 MB/s eta 0:00:00
+Downloading proto_plus-1.28.0-py3-none-any.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 208.7 MB/s eta 0:00:00
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 293.6 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 165.1 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 219.3 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 275.6 MB/s eta 0:00:00
+Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 161.1 MB/s eta 0:00:00
+Downloading googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 300.6/300.6 kB 308.0 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 290.3 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 253.9 MB/s eta 0:00:00
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 128.0 MB/s eta 0:00:00
+Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 215.6/215.6 kB 256.2 MB/s eta 0:00:00
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 304.8 MB/s eta 0:00:00
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 246.4 MB/s eta 0:00:00
+Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 260.0 MB/s eta 0:00:00
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 271.1 MB/s eta 0:00:00
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 225.7 MB/s eta 0:00:00
+Installing collected packages: urllib3, typing-extensions, python-multipart, python-dotenv, pycparser, pyasn1, protobuf, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, pyasn1-modules, proto-plus, opentelemetry-api, grpcio, googleapis-common-protos, cffi, anyio, starlette, pydantic, opentelemetry-semantic-conventions, grpcio-status, cryptography, pydantic-settings, opentelemetry-sdk, grpc-google-iam-v1, google-auth, fastapi, google-api-core, google-cloud-core, google-cloud-pubsub, google-cloud-firestore
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 cffi-2.0.0 charset_normalizer-3.4.7 click-8.4.0 cryptography-48.0.0 fastapi-0.136.1 google-api-core-2.30.3 google-auth-2.53.0 google-cloud-core-2.6.0 google-cloud-firestore-2.27.0 google-cloud-pubsub-2.38.0 googleapis-common-protos-1.75.0 grpc-google-iam-v1-0.14.4 grpcio-1.80.0 grpcio-status-1.80.0 h11-0.16.0 idna-3.15 opentelemetry-api-1.42.0 opentelemetry-sdk-1.42.0 opentelemetry-semantic-conventions-0.63b0 proto-plus-1.28.0 protobuf-6.33.6 pyasn1-0.6.3 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 requests-2.34.2 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 6a25e42d0353
+ ---> 30fc3be4e0c5
+Step 5/9 : COPY shared /app/shared
+ ---> c3c5696af6e3
+Step 6/9 : COPY services/assessment_service/app /app/app
+ ---> d10c36495b21
+Step 7/9 : ENV PYTHONPATH=/app
+ ---> Running in d78bfbc1f7ff
+Removing intermediate container d78bfbc1f7ff
+ ---> f77c12cdfe55
+Step 8/9 : EXPOSE 8080
+ ---> Running in 74364647efba
+Removing intermediate container 74364647efba
+ ---> 9e6ed5c8b794
+Step 9/9 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in a242598294b7
+Removing intermediate container a242598294b7
+ ---> 59bc7427d25b
+Successfully built 59bc7427d25b
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-service:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-service:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-service]
+211c76948032: Preparing
+83d5bc897c32: Preparing
+88a44a7a0ec9: Preparing
+d1767fe34262: Preparing
+759d51291459: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+94e760ec3074: Layer already exists
+799edc77eb3d: Layer already exists
+2e53cb234c59: Layer already exists
+211c76948032: Pushed
+759d51291459: Pushed
+83d5bc897c32: Pushed
+d1767fe34262: Pushed
+88a44a7a0ec9: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:61e83656b5bbb4ef12ac45b3c220a55551914043ad08c1c7e3e3b8a5abf26850 size: 2201
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                       IMAGES                                                                                   STATUS
+e9b443a1-9f29-4ca0-a91a-203d1e3b7000  2026-05-19T11:23:28+00:00  37S       gs://ada2026-488110_cloudbuild/source/1779189804.11485-3d9845d74c2e4307bdf5cd010a9f6f61.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-service (+1 more)  SUCCESS
+Building learning-profile-service...
+Creating temporary archive of 104 file(s) totalling 206.8 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.24.09.252367.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189849.353238-e697ecf7564848af8ffa06c1b45b01a0.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/ec729a7a-6b3f-46f7-a09d-bc62451fc894].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/ec729a7a-6b3f-46f7-a09d-bc62451fc894?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "ec729a7a-6b3f-46f7-a09d-bc62451fc894"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189849.353238-e697ecf7564848af8ffa06c1b45b01a0.tgz#1779189850294642
+Copying gs://ada2026-488110_cloudbuild/source/1779189849.353238-e697ecf7564848af8ffa06c1b45b01a0.tgz#1779189850294642...
+/ [0 files][    0.0 B/ 47.9 KiB]                                                / [1 files][ 47.9 KiB/ 47.9 KiB]                                                
+Operation completed over 1 objects/47.9 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  227.8kB
+Step 1/9 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Download complete
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/9 : WORKDIR /app
+ ---> Running in 08fecf579394
+Removing intermediate container 08fecf579394
+ ---> 9efcca5ec2e7
+Step 3/9 : COPY services/learning_profile_service/requirements.txt .
+ ---> 812a94f03f8f
+Step 4/9 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 6aea6543369d
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting pydantic (from -r requirements.txt (line 3))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 7.0 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 4))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting google-cloud-firestore (from -r requirements.txt (line 5))
+  Downloading google_cloud_firestore-2.27.0-py3-none-any.whl.metadata (10.0 kB)
+Collecting python-multipart (from -r requirements.txt (line 6))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 3))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 3))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 4))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting google-api-core<3.0.0,>=2.11.0 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_auth-2.53.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting google-cloud-core<3.0.0,>=2.0.0 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_cloud_core-2.6.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting grpcio<2.0.0,>=1.33.2 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting googleapis-common-protos<2.0.0,>=1.63.2 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting requests<3.0.0,>=2.20.0 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting grpcio-status<2.0.0,>=1.33.2 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio_status-1.80.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting anyio<5,>=3.6.2 (from starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette>=0.46.0->fastapi->-r requirements.txt (line 1))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting charset_normalizer<4,>=2 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 183.2 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.26 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests<3.0.0,>=2.20.0->google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 213.0 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 199.8 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 38.5 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 125.1 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 188.5 MB/s eta 0:00:00
+Downloading google_cloud_firestore-2.27.0-py3-none-any.whl (429 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 429.8/429.8 kB 267.2 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 229.5 MB/s eta 0:00:00
+Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.3/173.3 kB 264.0 MB/s eta 0:00:00
+Downloading google_auth-2.53.0-py3-none-any.whl (246 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 246.1/246.1 kB 276.3 MB/s eta 0:00:00
+Downloading google_cloud_core-2.6.0-py3-none-any.whl (29 kB)
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 217.6 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading proto_plus-1.28.0-py3-none-any.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 212.9 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 206.0 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 72.0 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 244.4 MB/s eta 0:00:00
+Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 150.9 MB/s eta 0:00:00
+Downloading googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 300.6/300.6 kB 239.2 MB/s eta 0:00:00
+Downloading grpcio_status-1.80.0-py3-none-any.whl (14 kB)
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 272.0 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 249.2 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 206.7 MB/s eta 0:00:00
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 244.6 MB/s eta 0:00:00
+Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 215.6/215.6 kB 254.0 MB/s eta 0:00:00
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 186.1 MB/s eta 0:00:00
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 209.9 MB/s eta 0:00:00
+Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 224.5 MB/s eta 0:00:00
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 211.0 MB/s eta 0:00:00
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 170.4 MB/s eta 0:00:00
+Installing collected packages: urllib3, typing-extensions, python-multipart, python-dotenv, pycparser, pyasn1, protobuf, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, pyasn1-modules, proto-plus, grpcio, googleapis-common-protos, cffi, anyio, starlette, pydantic, grpcio-status, cryptography, pydantic-settings, google-auth, fastapi, google-api-core, google-cloud-core, google-cloud-firestore
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 cffi-2.0.0 charset_normalizer-3.4.7 click-8.4.0 cryptography-48.0.0 fastapi-0.136.1 google-api-core-2.30.3 google-auth-2.53.0 google-cloud-core-2.6.0 google-cloud-firestore-2.27.0 googleapis-common-protos-1.75.0 grpcio-1.80.0 grpcio-status-1.80.0 h11-0.16.0 idna-3.15 proto-plus-1.28.0 protobuf-6.33.6 pyasn1-0.6.3 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 requests-2.34.2 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 6aea6543369d
+ ---> e6fca557fd15
+Step 5/9 : COPY shared /app/shared
+ ---> 455608dce3fe
+Step 6/9 : COPY services/learning_profile_service/app /app/app
+ ---> 33864fd43d9f
+Step 7/9 : ENV PYTHONPATH=/app
+ ---> Running in 8518b7cceac8
+Removing intermediate container 8518b7cceac8
+ ---> 49c12364c4d0
+Step 8/9 : EXPOSE 8080
+ ---> Running in 51e4281caf02
+Removing intermediate container 51e4281caf02
+ ---> 71a375ea8f27
+Step 9/9 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in b68ccffe6c50
+Removing intermediate container b68ccffe6c50
+ ---> 38516ab77674
+Successfully built 38516ab77674
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-profile-service:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-profile-service:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-profile-service]
+802d53ee4684: Preparing
+ec31a5aff638: Preparing
+eff21643fc08: Preparing
+16ed7e308673: Preparing
+154dae1a69b9: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+94e760ec3074: Layer already exists
+2e53cb234c59: Layer already exists
+799edc77eb3d: Layer already exists
+802d53ee4684: Pushed
+16ed7e308673: Pushed
+154dae1a69b9: Pushed
+ec31a5aff638: Pushed
+eff21643fc08: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:05a3b85f4089ef759d126d89288fdf4bb68cac91dcec67dd5d89f4ef42c7fc70 size: 2201
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                        IMAGES                                                                                         STATUS
+ec729a7a-6b3f-46f7-a09d-bc62451fc894  2026-05-19T11:24:13+00:00  32S       gs://ada2026-488110_cloudbuild/source/1779189849.353238-e697ecf7564848af8ffa06c1b45b01a0.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-profile-service (+1 more)  SUCCESS
+Building auto-grading-agent...
+Creating temporary archive of 104 file(s) totalling 225.7 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.24.50.702024.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189890.791104-f92bc8c89b0e4f90869840a45123d9f5.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/1271db3d-615d-436f-98f6-cff1d6638435].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/1271db3d-615d-436f-98f6-cff1d6638435?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "1271db3d-615d-436f-98f6-cff1d6638435"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189890.791104-f92bc8c89b0e4f90869840a45123d9f5.tgz#1779189891722734
+Copying gs://ada2026-488110_cloudbuild/source/1779189890.791104-f92bc8c89b0e4f90869840a45123d9f5.tgz#1779189891722734...
+/ [0 files][    0.0 B/ 48.8 KiB]                                                / [1 files][ 48.8 KiB/ 48.8 KiB]                                                
+Operation completed over 1 objects/48.8 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  247.3kB
+Step 1/9 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+6f92665ed17a: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/9 : WORKDIR /app
+ ---> Running in ecef1fde165d
+Removing intermediate container ecef1fde165d
+ ---> 853bc06dcca3
+Step 3/9 : COPY agents/auto_grading_agent/requirements.txt .
+ ---> a2b1fb8d456d
+Step 4/9 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 3048b00de67e
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting httpx (from -r requirements.txt (line 3))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pydantic (from -r requirements.txt (line 4))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 56.0 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 5))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting google-cloud-firestore (from -r requirements.txt (line 6))
+  Downloading google_cloud_firestore-2.27.0-py3-none-any.whl.metadata (10.0 kB)
+Collecting google-cloud-pubsub (from -r requirements.txt (line 7))
+  Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl.metadata (14 kB)
+Collecting requests (from -r requirements.txt (line 8))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting python-multipart (from -r requirements.txt (line 9))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio (from httpx->-r requirements.txt (line 3))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting certifi (from httpx->-r requirements.txt (line 3))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx->-r requirements.txt (line 3))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx->-r requirements.txt (line 3))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 4))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 4))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 5))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting google-api-core<3.0.0,>=2.11.0 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading google_auth-2.53.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting google-cloud-core<3.0.0,>=2.0.0 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading google_cloud_core-2.6.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting grpcio<2.0.0,>=1.33.2 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting grpc-google-iam-v1<1.0.0,>=0.14.0 (from google-cloud-pubsub->-r requirements.txt (line 7))
+  Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl.metadata (9.1 kB)
+Collecting grpcio-status>=1.33.2 (from google-cloud-pubsub->-r requirements.txt (line 7))
+  Downloading grpcio_status-1.80.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting opentelemetry-api>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 7))
+  Downloading opentelemetry_api-1.42.0-py3-none-any.whl.metadata (1.4 kB)
+Collecting opentelemetry-sdk>=1.27.0 (from google-cloud-pubsub->-r requirements.txt (line 7))
+  Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting charset_normalizer<4,>=2 (from requests->-r requirements.txt (line 8))
+  Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 161.5 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.26 (from requests->-r requirements.txt (line 8))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.63.2 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting opentelemetry-semantic-conventions==0.63b0 (from opentelemetry-sdk>=1.27.0->google-cloud-pubsub->-r requirements.txt (line 7))
+  Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl.metadata (2.4 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 6))
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 247.2 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 239.8 MB/s eta 0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 222.2 MB/s eta 0:00:00
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 240.3 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 190.5 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 258.4 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 228.5 MB/s eta 0:00:00
+Downloading google_cloud_firestore-2.27.0-py3-none-any.whl (429 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 429.8/429.8 kB 223.8 MB/s eta 0:00:00
+Downloading google_cloud_pubsub-2.38.0-py3-none-any.whl (324 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 324.8/324.8 kB 280.3 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 236.4 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 128.3 MB/s eta 0:00:00
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 284.8 MB/s eta 0:00:00
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 262.9 MB/s eta 0:00:00
+Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.3/173.3 kB 271.6 MB/s eta 0:00:00
+Downloading google_auth-2.53.0-py3-none-any.whl (246 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 246.1/246.1 kB 285.2 MB/s eta 0:00:00
+Downloading google_cloud_core-2.6.0-py3-none-any.whl (29 kB)
+Downloading grpc_google_iam_v1-0.14.4-py3-none-any.whl (32 kB)
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 238.2 MB/s eta 0:00:00
+Downloading grpcio_status-1.80.0-py3-none-any.whl (14 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 247.7 MB/s eta 0:00:00
+Downloading opentelemetry_api-1.42.0-py3-none-any.whl (61 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.3/61.3 kB 235.5 MB/s eta 0:00:00
+Downloading opentelemetry_sdk-1.42.0-py3-none-any.whl (170 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.9/170.9 kB 276.3 MB/s eta 0:00:00
+Downloading opentelemetry_semantic_conventions-0.63b0-py3-none-any.whl (203 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 203.7/203.7 kB 280.9 MB/s eta 0:00:00
+Downloading proto_plus-1.28.0-py3-none-any.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 212.3 MB/s eta 0:00:00
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 193.4 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 230.5 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 239.2 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 191.3 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 249.8 MB/s eta 0:00:00
+Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 260.5 MB/s eta 0:00:00
+Downloading googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 300.6/300.6 kB 289.7 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 277.5 MB/s eta 0:00:00
+Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 215.6/215.6 kB 285.5 MB/s eta 0:00:00
+Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 244.9 MB/s eta 0:00:00
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 209.3 MB/s eta 0:00:00
+Installing collected packages: urllib3, typing-extensions, python-multipart, python-dotenv, pycparser, pyasn1, protobuf, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, pyasn1-modules, proto-plus, opentelemetry-api, httpcore, grpcio, googleapis-common-protos, cffi, anyio, starlette, pydantic, opentelemetry-semantic-conventions, httpx, grpcio-status, cryptography, pydantic-settings, opentelemetry-sdk, grpc-google-iam-v1, google-auth, fastapi, google-api-core, google-cloud-core, google-cloud-pubsub, google-cloud-firestore
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 cffi-2.0.0 charset_normalizer-3.4.7 click-8.4.0 cryptography-48.0.0 fastapi-0.136.1 google-api-core-2.30.3 google-auth-2.53.0 google-cloud-core-2.6.0 google-cloud-firestore-2.27.0 google-cloud-pubsub-2.38.0 googleapis-common-protos-1.75.0 grpc-google-iam-v1-0.14.4 grpcio-1.80.0 grpcio-status-1.80.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.15 opentelemetry-api-1.42.0 opentelemetry-sdk-1.42.0 opentelemetry-semantic-conventions-0.63b0 proto-plus-1.28.0 protobuf-6.33.6 pyasn1-0.6.3 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 requests-2.34.2 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 3048b00de67e
+ ---> 820dd8309ee9
+Step 5/9 : COPY shared /app/shared
+ ---> 798e3b3dd9d3
+Step 6/9 : COPY agents/auto_grading_agent/app /app/app
+ ---> 5522ae2aa282
+Step 7/9 : ENV PYTHONPATH=/app
+ ---> Running in f89531d8accd
+Removing intermediate container f89531d8accd
+ ---> 9b7edd8aef29
+Step 8/9 : EXPOSE 8080
+ ---> Running in e3e795f44182
+Removing intermediate container e3e795f44182
+ ---> 1fb32f8069d6
+Step 9/9 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in 1db1c8dc928a
+Removing intermediate container 1db1c8dc928a
+ ---> ceced3162e7f
+Successfully built ceced3162e7f
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/auto-grading-agent:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/auto-grading-agent:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/auto-grading-agent]
+ad780d37e432: Preparing
+ee1cd603233a: Preparing
+547525a044c7: Preparing
+15a3a434dfd1: Preparing
+d05df2c50a3d: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+94e760ec3074: Layer already exists
+2e53cb234c59: Layer already exists
+799edc77eb3d: Layer already exists
+15a3a434dfd1: Pushed
+ee1cd603233a: Pushed
+ad780d37e432: Pushed
+d05df2c50a3d: Pushed
+547525a044c7: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:412fd2cf192e5efacbee16293fca00ae7dd27b93345af65f706be45565e86791 size: 2201
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                        IMAGES                                                                                   STATUS
+1271db3d-615d-436f-98f6-cff1d6638435  2026-05-19T11:24:55+00:00  43S       gs://ada2026-488110_cloudbuild/source/1779189890.791104-f92bc8c89b0e4f90869840a45123d9f5.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/auto-grading-agent (+1 more)  SUCCESS
+Building recommender-agent...
+Creating temporary archive of 104 file(s) totalling 246.7 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.25.42.690587.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189942.777029-48b9be777a264be8b667ce369fef8b38.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/02feae72-4fae-4892-a717-07dfe69e4050].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/02feae72-4fae-4892-a717-07dfe69e4050?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "02feae72-4fae-4892-a717-07dfe69e4050"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189942.777029-48b9be777a264be8b667ce369fef8b38.tgz#1779189943616801
+Copying gs://ada2026-488110_cloudbuild/source/1779189942.777029-48b9be777a264be8b667ce369fef8b38.tgz#1779189943616801...
+/ [0 files][    0.0 B/ 50.1 KiB]                                                / [1 files][ 50.1 KiB/ 50.1 KiB]                                                
+Operation completed over 1 objects/50.1 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  268.8kB
+Step 1/6 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Verifying Checksum
+6f92665ed17a: Download complete
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/6 : WORKDIR /app
+ ---> Running in 44cd0a164d65
+Removing intermediate container 44cd0a164d65
+ ---> e0fbe7530446
+Step 3/6 : COPY agents/recommender_agent/requirements.txt .
+ ---> fe6cdb64ace6
+Step 4/6 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 21ba918952e0
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting httpx (from -r requirements.txt (line 3))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pydantic (from -r requirements.txt (line 4))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 45.4 MB/s eta 0:00:00
+Collecting google-cloud-firestore (from -r requirements.txt (line 5))
+  Downloading google_cloud_firestore-2.27.0-py3-none-any.whl.metadata (10.0 kB)
+Collecting requests (from -r requirements.txt (line 6))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio (from httpx->-r requirements.txt (line 3))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting certifi (from httpx->-r requirements.txt (line 3))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx->-r requirements.txt (line 3))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx->-r requirements.txt (line 3))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 4))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 4))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting google-api-core<3.0.0,>=2.11.0 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_api_core-2.30.3-py3-none-any.whl.metadata (3.1 kB)
+Collecting google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_auth-2.53.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting google-cloud-core<3.0.0,>=2.0.0 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading google_cloud_core-2.6.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting grpcio<2.0.0,>=1.33.2 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading proto_plus-1.28.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting charset_normalizer<4,>=2 (from requests->-r requirements.txt (line 6))
+  Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.9/40.9 kB 199.5 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.26 (from requests->-r requirements.txt (line 6))
+  Downloading urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.63.2 (from google-api-core<3.0.0,>=2.11.0->google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading googleapis_common_protos-1.75.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting grpcio-status<2.0.0,>=1.33.2 (from google-api-core[grpc]<3.0.0,>=2.11.0->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading grpcio_status-1.80.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting cryptography>=38.0.3 (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting cffi>=2.0.0 (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+Collecting protobuf<8.0.0,>=4.25.8 (from google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting pyasn1<0.7.0,>=0.6.1 (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-firestore->-r requirements.txt (line 5))
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 241.0 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 229.4 MB/s eta 0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 228.2 MB/s eta 0:00:00
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 236.3 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 129.1 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 241.8 MB/s eta 0:00:00
+Downloading google_cloud_firestore-2.27.0-py3-none-any.whl (429 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 429.8/429.8 kB 280.0 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 230.4 MB/s eta 0:00:00
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 186.8 MB/s eta 0:00:00
+Downloading charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 kB 249.2 MB/s eta 0:00:00
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 251.6 MB/s eta 0:00:00
+Downloading google_api_core-2.30.3-py3-none-any.whl (173 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 173.3/173.3 kB 232.4 MB/s eta 0:00:00
+Downloading google_auth-2.53.0-py3-none-any.whl (246 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 246.1/246.1 kB 225.3 MB/s eta 0:00:00
+Downloading google_cloud_core-2.6.0-py3-none-any.whl (29 kB)
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 227.5 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 203.7 MB/s eta 0:00:00
+Downloading proto_plus-1.28.0-py3-none-any.whl (50 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.4/50.4 kB 204.4 MB/s eta 0:00:00
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 217.1 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 248.4 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 189.0 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 246.5 MB/s eta 0:00:00
+Downloading cryptography-48.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 249.6 MB/s eta 0:00:00
+Downloading googleapis_common_protos-1.75.0-py3-none-any.whl (300 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 300.6/300.6 kB 271.9 MB/s eta 0:00:00
+Downloading grpcio_status-1.80.0-py3-none-any.whl (14 kB)
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 278.7 MB/s eta 0:00:00
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 145.0 MB/s eta 0:00:00
+Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 215.6/215.6 kB 272.8 MB/s eta 0:00:00
+Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 241.3 MB/s eta 0:00:00
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 88.4 MB/s eta 0:00:00
+Installing collected packages: urllib3, typing-extensions, pycparser, pyasn1, protobuf, idna, h11, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, requests, pydantic-core, pyasn1-modules, proto-plus, httpcore, grpcio, googleapis-common-protos, cffi, anyio, starlette, pydantic, httpx, grpcio-status, cryptography, google-auth, fastapi, google-api-core, google-cloud-core, google-cloud-firestore
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 cffi-2.0.0 charset_normalizer-3.4.7 click-8.4.0 cryptography-48.0.0 fastapi-0.136.1 google-api-core-2.30.3 google-auth-2.53.0 google-cloud-core-2.6.0 google-cloud-firestore-2.27.0 googleapis-common-protos-1.75.0 grpcio-1.80.0 grpcio-status-1.80.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.15 proto-plus-1.28.0 protobuf-6.33.6 pyasn1-0.6.3 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 requests-2.34.2 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.7.0 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 21ba918952e0
+ ---> fac4f42c5a9a
+Step 5/6 : COPY agents/recommender_agent/app /app/app
+ ---> eaf5adf056fa
+Step 6/6 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in ebd730f788a5
+Removing intermediate container ebd730f788a5
+ ---> a7d3a11dc7c9
+Successfully built a7d3a11dc7c9
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/recommender-agent:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/recommender-agent:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/recommender-agent]
+ce7109768e46: Preparing
+d74a379e0b21: Preparing
+733b2eb9c290: Preparing
+fcdd3d4e77d0: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+94e760ec3074: Layer already exists
+799edc77eb3d: Layer already exists
+2e53cb234c59: Layer already exists
+733b2eb9c290: Pushed
+ce7109768e46: Pushed
+fcdd3d4e77d0: Pushed
+d74a379e0b21: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:f4f2882aea481cd0a0679bc6670d6c58fa7ee8ebba621a12d00956cbf8727fad size: 1993
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                        IMAGES                                                                                  STATUS
+02feae72-4fae-4892-a717-07dfe69e4050  2026-05-19T11:25:46+00:00  39S       gs://ada2026-488110_cloudbuild/source/1779189942.777029-48b9be777a264be8b667ce369fef8b38.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/recommender-agent (+1 more)  SUCCESS
+Building assessment-mcp-server...
+Creating temporary archive of 104 file(s) totalling 264.6 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.26.30.821930.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779189990.907569-da0ae235a28c4cfdb0f9a132339ac1dd.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/bcb7f75f-2903-4ddc-81f4-9ed229a513a9].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/bcb7f75f-2903-4ddc-81f4-9ed229a513a9?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "bcb7f75f-2903-4ddc-81f4-9ed229a513a9"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779189990.907569-da0ae235a28c4cfdb0f9a132339ac1dd.tgz#1779189992023488
+Copying gs://ada2026-488110_cloudbuild/source/1779189990.907569-da0ae235a28c4cfdb0f9a132339ac1dd.tgz#1779189992023488...
+/ [0 files][    0.0 B/ 51.0 KiB]                                                / [1 files][ 51.0 KiB/ 51.0 KiB]                                                
+Operation completed over 1 objects/51.0 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  287.2kB
+Step 1/8 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Verifying Checksum
+6f92665ed17a: Download complete
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/8 : WORKDIR /app
+ ---> Running in 31f2ecdf5877
+Removing intermediate container 31f2ecdf5877
+ ---> 8b234ba7eaf0
+Step 3/8 : COPY mcp_servers/assessment_mcp_server/requirements.txt .
+ ---> 0e98e79aed3b
+Step 4/8 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 6187b9ccaed1
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting httpx (from -r requirements.txt (line 3))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pydantic (from -r requirements.txt (line 4))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 7.3 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 5))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting python-multipart (from -r requirements.txt (line 6))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio (from httpx->-r requirements.txt (line 3))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting certifi (from httpx->-r requirements.txt (line 3))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx->-r requirements.txt (line 3))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx->-r requirements.txt (line 3))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 4))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 4))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 5))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 185.5 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 235.6 MB/s eta 0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 238.2 MB/s eta 0:00:00
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 242.9 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 32.7 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 123.1 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 229.4 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 249.2 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 229.7 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 237.7 MB/s eta 0:00:00
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 238.5 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 180.4 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 260.8 MB/s eta 0:00:00
+Installing collected packages: typing-extensions, python-multipart, python-dotenv, idna, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, httpcore, anyio, starlette, pydantic, httpx, pydantic-settings, fastapi
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 click-8.4.0 fastapi-0.136.1 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.15 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 6187b9ccaed1
+ ---> 25c69c017cc9
+Step 5/8 : COPY mcp_servers/assessment_mcp_server/server.py /app/server.py
+ ---> b5822c4ac641
+Step 6/8 : COPY mcp_servers/assessment_mcp_server/tools.py /app/tools.py
+ ---> d61a10eac6f9
+Step 7/8 : EXPOSE 8000
+ ---> Running in 4c7e1738918a
+Removing intermediate container 4c7e1738918a
+ ---> d14b3896fa93
+Step 8/8 : CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in 03cfa459bb40
+Removing intermediate container 03cfa459bb40
+ ---> 8901e4269c8e
+Successfully built 8901e4269c8e
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-mcp-server:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-mcp-server:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-mcp-server]
+3a49d32b6120: Preparing
+027ffd34b1fd: Preparing
+1f432a819b6e: Preparing
+765a92c37572: Preparing
+7de9b164a5d8: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+2e53cb234c59: Layer already exists
+94e760ec3074: Layer already exists
+799edc77eb3d: Layer already exists
+3a49d32b6120: Pushed
+765a92c37572: Pushed
+027ffd34b1fd: Pushed
+7de9b164a5d8: Pushed
+1f432a819b6e: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:0d7d0da2b0a141fbeac9e7399cf87f3e540ee26d1bfa83a1eb43af0582f7b1c2 size: 2198
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                        IMAGES                                                                                      STATUS
+bcb7f75f-2903-4ddc-81f4-9ed229a513a9  2026-05-19T11:26:35+00:00  23S       gs://ada2026-488110_cloudbuild/source/1779189990.907569-da0ae235a28c4cfdb0f9a132339ac1dd.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/assessment-mcp-server (+1 more)  SUCCESS
+Building learning-course-mcp-server...
+Creating temporary archive of 104 file(s) totalling 276.1 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.27.03.775158.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779190023.8619-c67c1505f11246dbaf18badae1c80912.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/5bdbb694-ee71-471a-afdc-74d985a23a35].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/5bdbb694-ee71-471a-afdc-74d985a23a35?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "5bdbb694-ee71-471a-afdc-74d985a23a35"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779190023.8619-c67c1505f11246dbaf18badae1c80912.tgz#1779190024709740
+Copying gs://ada2026-488110_cloudbuild/source/1779190023.8619-c67c1505f11246dbaf18badae1c80912.tgz#1779190024709740...
+/ [0 files][    0.0 B/ 51.8 KiB]                                                / [1 files][ 51.8 KiB/ 51.8 KiB]                                                
+Operation completed over 1 objects/51.8 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon    299kB
+Step 1/8 : FROM python:3.11-slim
+3.11-slim: Pulling from library/python
+57fb71246055: Already exists
+01f59aef9b5c: Pulling fs layer
+fb4c70443787: Pulling fs layer
+6f92665ed17a: Pulling fs layer
+6f92665ed17a: Verifying Checksum
+6f92665ed17a: Download complete
+01f59aef9b5c: Verifying Checksum
+01f59aef9b5c: Download complete
+fb4c70443787: Verifying Checksum
+fb4c70443787: Download complete
+01f59aef9b5c: Pull complete
+fb4c70443787: Pull complete
+6f92665ed17a: Pull complete
+Digest: sha256:9a7765b36773a37061455b332f18e265e7f58f6fea9c419a550d2a8b0e9db834
+Status: Downloaded newer image for python:3.11-slim
+ ---> 5d617d87925d
+Step 2/8 : WORKDIR /app
+ ---> Running in 272a1cbc6ed8
+Removing intermediate container 272a1cbc6ed8
+ ---> 1e4e28ad9275
+Step 3/8 : COPY mcp_servers/learning_course_mcp_server/requirements.txt .
+ ---> e387b525dba7
+Step 4/8 : RUN pip install --no-cache-dir -r requirements.txt
+ ---> Running in 81f0e8c6abb9
+Collecting fastapi (from -r requirements.txt (line 1))
+  Downloading fastapi-0.136.1-py3-none-any.whl.metadata (28 kB)
+Collecting uvicorn (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.47.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting httpx (from -r requirements.txt (line 3))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pydantic (from -r requirements.txt (line 4))
+  Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 7.5 MB/s eta 0:00:00
+Collecting pydantic-settings (from -r requirements.txt (line 5))
+  Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+Collecting python-multipart (from -r requirements.txt (line 6))
+  Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading starlette-1.0.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 2))
+  Downloading click-8.4.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting anyio (from httpx->-r requirements.txt (line 3))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting certifi (from httpx->-r requirements.txt (line 3))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx->-r requirements.txt (line 3))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx->-r requirements.txt (line 3))
+  Downloading idna-3.15-py3-none-any.whl.metadata (7.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic->-r requirements.txt (line 4))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.4 (from pydantic->-r requirements.txt (line 4))
+  Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings->-r requirements.txt (line 5))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Downloading fastapi-0.136.1-py3-none-any.whl (117 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 97.2 MB/s eta 0:00:00
+Downloading uvicorn-0.47.0-py3-none-any.whl (71 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.3/71.3 kB 207.8 MB/s eta 0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 230.0 MB/s eta 0:00:00
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 212.2 MB/s eta 0:00:00
+Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 35.4 MB/s eta 0:00:00
+Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 127.4 MB/s eta 0:00:00
+Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 239.0 MB/s eta 0:00:00
+Downloading python_multipart-0.0.29-py3-none-any.whl (29 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.4.0-py3-none-any.whl (116 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.1/116.1 kB 281.0 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading starlette-1.0.0-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.7/72.7 kB 188.3 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.4/114.4 kB 236.8 MB/s eta 0:00:00
+Downloading idna-3.15-py3-none-any.whl (72 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.3/72.3 kB 225.8 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 205.3 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 224.3 MB/s eta 0:00:00
+Installing collected packages: typing-extensions, python-multipart, python-dotenv, idna, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, httpcore, anyio, starlette, pydantic, httpx, pydantic-settings, fastapi
+Successfully installed annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 certifi-2026.4.22 click-8.4.0 fastapi-0.136.1 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.15 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.14.1 python-dotenv-1.2.2 python-multipart-0.0.29 starlette-1.0.0 typing-extensions-4.15.0 typing-inspection-0.4.2 uvicorn-0.47.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[0m[91m
+[notice] A new release of pip is available: 24.0 -> 26.1.1
+[notice] To update, run: pip install --upgrade pip
+[0mRemoving intermediate container 81f0e8c6abb9
+ ---> 7e88744baa58
+Step 5/8 : COPY mcp_servers/learning_course_mcp_server/server.py /app/server.py
+ ---> c30cae10360a
+Step 6/8 : COPY mcp_servers/learning_course_mcp_server/tools.py /app/tools.py
+ ---> 52ded09d295b
+Step 7/8 : EXPOSE 8000
+ ---> Running in 49b9926b135d
+Removing intermediate container 49b9926b135d
+ ---> e695239da2f1
+Step 8/8 : CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in 1c480d401d08
+Removing intermediate container 1c480d401d08
+ ---> 48b8d6748337
+Successfully built 48b8d6748337
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-course-mcp-server:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-course-mcp-server:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-course-mcp-server]
+bcac14ed4c14: Preparing
+66c0fef6ff8a: Preparing
+13125f3de34b: Preparing
+4de82f0fc60c: Preparing
+3ef34b29ec15: Preparing
+94e760ec3074: Preparing
+799edc77eb3d: Preparing
+2e53cb234c59: Preparing
+79dd1f4c855c: Preparing
+94e760ec3074: Layer already exists
+799edc77eb3d: Layer already exists
+2e53cb234c59: Layer already exists
+bcac14ed4c14: Pushed
+3ef34b29ec15: Pushed
+4de82f0fc60c: Pushed
+66c0fef6ff8a: Pushed
+13125f3de34b: Pushed
+79dd1f4c855c: Pushed
+latest: digest: sha256:36d0e6dcb83997abf8cc656764046e86193bb8442d88fd0515c9153310a0cc22 size: 2198
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                      IMAGES                                                                                           STATUS
+5bdbb694-ee71-471a-afdc-74d985a23a35  2026-05-19T11:27:08+00:00  22S       gs://ada2026-488110_cloudbuild/source/1779190023.8619-c67c1505f11246dbaf18badae1c80912.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/learning-course-mcp-server (+1 more)  SUCCESS
+Building frontend...
+Creating temporary archive of 104 file(s) totalling 287.6 KiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/gijskruize/.config/gcloud/logs/2026.05.19/13.27.34.641246.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://ada2026-488110_cloudbuild/source/1779190054.73355-9a4c3d66c4f44357b48999b5e82d9af1.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/ada2026-488110/locations/global/builds/9c48aee2-fae1-4bde-b450-4d8803b11094].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/9c48aee2-fae1-4bde-b450-4d8803b11094?project=479923065661 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+------------------------------------------------------------------------------------------- REMOTE BUILD OUTPUT --------------------------------------------------------------------------------------------
+starting build "9c48aee2-fae1-4bde-b450-4d8803b11094"
+
+FETCHSOURCE
+Fetching storage object: gs://ada2026-488110_cloudbuild/source/1779190054.73355-9a4c3d66c4f44357b48999b5e82d9af1.tgz#1779190055721440
+Copying gs://ada2026-488110_cloudbuild/source/1779190054.73355-9a4c3d66c4f44357b48999b5e82d9af1.tgz#1779190055721440...
+/ [0 files][    0.0 B/ 52.6 KiB]                                                / [1 files][ 52.6 KiB/ 52.6 KiB]                                                
+Operation completed over 1 objects/52.6 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  310.8kB
+Step 1/7 : FROM nginx:alpine
+alpine: Pulling from library/nginx
+6a0ac1617861: Already exists
+d0ffc65fde23: Pulling fs layer
+02eda4087d06: Pulling fs layer
+42f24ddde8a4: Pulling fs layer
+be5351d87f1f: Pulling fs layer
+22ed557e9038: Pulling fs layer
+19af4ef65048: Pulling fs layer
+7f32a4497b31: Pulling fs layer
+7f32a4497b31: Waiting
+02eda4087d06: Verifying Checksum
+02eda4087d06: Download complete
+be5351d87f1f: Verifying Checksum
+be5351d87f1f: Download complete
+22ed557e9038: Verifying Checksum
+22ed557e9038: Download complete
+42f24ddde8a4: Verifying Checksum
+42f24ddde8a4: Download complete
+19af4ef65048: Verifying Checksum
+19af4ef65048: Download complete
+d0ffc65fde23: Verifying Checksum
+d0ffc65fde23: Download complete
+d0ffc65fde23: Pull complete
+7f32a4497b31: Verifying Checksum
+7f32a4497b31: Download complete
+02eda4087d06: Pull complete
+42f24ddde8a4: Pull complete
+be5351d87f1f: Pull complete
+22ed557e9038: Pull complete
+19af4ef65048: Pull complete
+7f32a4497b31: Pull complete
+Digest: sha256:dc48b7a872a79fb541ba5081d320b11b549231bc63ba465a7495afaa7d2ebcb8
+Status: Downloaded newer image for nginx:alpine
+ ---> f787d2269bb5
+Step 2/7 : COPY frontend/index.html /usr/share/nginx/html/
+ ---> 995db3990b01
+Step 3/7 : COPY frontend/app.js /usr/share/nginx/html/
+ ---> 2737b1d49386
+Step 4/7 : COPY frontend/style.css /usr/share/nginx/html/
+ ---> 67057f924717
+Step 5/7 : COPY frontend/entrypoint.sh /usr/share/nginx/html/
+ ---> 8af53fed4b43
+Step 6/7 : RUN chmod +x /usr/share/nginx/html/entrypoint.sh
+ ---> Running in 56ba2a385df0
+Removing intermediate container 56ba2a385df0
+ ---> d104fb11b166
+Step 7/7 : ENTRYPOINT ["/usr/share/nginx/html/entrypoint.sh"]
+ ---> Running in f3e6584bafd5
+Removing intermediate container f3e6584bafd5
+ ---> eef1a92f1a5a
+Successfully built eef1a92f1a5a
+Successfully tagged us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/frontend:latest
+PUSH
+Pushing us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/frontend:latest
+The push refers to repository [us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/frontend]
+7117f9c72507: Preparing
+7117f9c72507: Preparing
+013c8e62aef4: Preparing
+649d347a0708: Preparing
+a6cf041c566f: Preparing
+26f172a95252: Preparing
+e573b1a36590: Preparing
+01f4610142c1: Preparing
+1d3b703bc87d: Preparing
+cf531791fc49: Preparing
+dcb787d86012: Preparing
+3d0102a0d002: Preparing
+29df493baa13: Preparing
+3d0102a0d002: Waiting
+29df493baa13: Waiting
+dcb787d86012: Layer already exists
+cf531791fc49: Layer already exists
+1d3b703bc87d: Layer already exists
+26f172a95252: Layer already exists
+e573b1a36590: Layer already exists
+01f4610142c1: Layer already exists
+29df493baa13: Layer already exists
+3d0102a0d002: Layer already exists
+649d347a0708: Pushed
+013c8e62aef4: Pushed
+7117f9c72507: Pushed
+a6cf041c566f: Pushed
+latest: digest: sha256:fd445bd70574a91c7c7f8d941098303f84d6cdb078a6766ae3c82cbdac13540b size: 3026
+DONE
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ID                                    CREATE_TIME                DURATION  SOURCE                                                                                       IMAGES                                                                         STATUS
+9c48aee2-fae1-4bde-b450-4d8803b11094  2026-05-19T11:27:38+00:00  13S       gs://ada2026-488110_cloudbuild/source/1779190054.73355-9a4c3d66c4f44357b48999b5e82d9af1.tgz  us-central1-docker.pkg.dev/ada2026-488110/learnsphere-repo/frontend (+1 more)  SUCCESS
+Deploying Cloud Run services...
+Deploying ollama...
+Deploying container to Cloud Run service [[1mollama[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Setting IAM Policy.............................................done
+Creating Revision..................................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mollama[m] revision [[1mollama-00004-bq9[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://ollama-479923065661.us-central1.run.app[m
+Deploying ai-proxy...
+Deploying container to Cloud Run service [[1mai-proxy[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Setting IAM Policy..................................................done
+Creating Revision.................done
+Routing traffic.....done
+Done.
+Service [[1mai-proxy[m] revision [[1mai-proxy-00002-xff[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://ai-proxy-479923065661.us-central1.run.app[m
+Deploying course-service...
+Deploying container to Cloud Run service [[1mcourse-service[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Setting IAM Policy....................................................done
+Creating Revision............................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mcourse-service[m] revision [[1mcourse-service-00002-75d[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://course-service-479923065661.us-central1.run.app[m
+Deploying assessment-service...
+Deploying container to Cloud Run service [[1massessment-service[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Setting IAM Policy...................................................done
+Creating Revision.................................................................................................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1massessment-service[m] revision [[1massessment-service-00002-jv6[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://assessment-service-479923065661.us-central1.run.app[m
+Deploying learning-profile-service...
+Deploying container to Cloud Run service [[1mlearning-profile-service[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Setting IAM Policy.............................................done
+Creating Revision..................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mlearning-profile-service[m] revision [[1mlearning-profile-service-00002-7dj[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://learning-profile-service-479923065661.us-central1.run.app[m
+Deploying auto-grading-agent...
+Deploying container to Cloud Run service [[1mauto-grading-agent[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying new service...
+Setting IAM Policy..................................................done
+Creating Revision..............................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mauto-grading-agent[m] revision [[1mauto-grading-agent-00001-rlw[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://auto-grading-agent-479923065661.us-central1.run.app[m
+Deploying recommender-agent...
+Deploying container to Cloud Run service [[1mrecommender-agent[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying new service...
+Setting IAM Policy...................................................done
+Creating Revision....................................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mrecommender-agent[m] revision [[1mrecommender-agent-00001-gjg[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://recommender-agent-479923065661.us-central1.run.app[m
+Deploying assessment-mcp-server...
+Deploying container to Cloud Run service [[1massessment-mcp-server[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying new service...
+Setting IAM Policy..................................................done
+Creating Revision............................................done
+Routing traffic.....done
+Done.
+Service [[1massessment-mcp-server[m] revision [[1massessment-mcp-server-00001-rk5[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://assessment-mcp-server-479923065661.us-central1.run.app[m
+Deploying learning-course-mcp-server...
+Deploying container to Cloud Run service [[1mlearning-course-mcp-server[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying new service...
+Setting IAM Policy..................................................done
+Creating Revision..........................................done
+Routing traffic.....done
+Done.
+Service [[1mlearning-course-mcp-server[m] revision [[1mlearning-course-mcp-server-00001-9s7[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://learning-course-mcp-server-479923065661.us-central1.run.app[m
+Deploying frontend...
+Deploying container to Cloud Run service [[1mfrontend[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying new service...
+Setting IAM Policy....................done
+Creating Revision.....................................................done
+Routing traffic.....done
+Done.
+Service [[1mfrontend[m] revision [[1mfrontend-00001-z6g[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://frontend-479923065661.us-central1.run.app[m
+Cloud Run services deployed.
+Deploying function: profile_update_function...
+Preparing function...
+.......done.
+Deploying function...
+[Build]..........................................................................................................................................................................................................................................................................................................................................................................................................................................done
+[Service]........................................................................................................................................................................................................................................done
+[Trigger]..................................................................................done
+Done.
+You can view your function in the Cloud Console here: https://console.cloud.google.com/functions/details/us-central1/profile_update_function?project=ada2026-488110
+
+buildConfig:
+  automaticUpdatePolicy: {}
+  build: projects/479923065661/locations/us-central1/builds/19af7310-23ab-456c-b4e2-e767ccef38c2
+  dockerRegistry: ARTIFACT_REGISTRY
+  dockerRepository: projects/ada2026-488110/locations/us-central1/repositories/gcf-artifacts
+  entryPoint: on_submission_graded
+  runtime: python311
+  serviceAccount: projects/ada2026-488110/serviceAccounts/479923065661-compute@developer.gserviceaccount.com
+  source:
+    storageSource:
+      bucket: gcf-v2-sources-479923065661-us-central1
+      generation: '1779190358479994'
+      object: profile_update_function/function-source.zip
+  sourceProvenance:
+    resolvedStorageSource:
+      bucket: gcf-v2-sources-479923065661-us-central1
+      generation: '1779190358479994'
+      object: profile_update_function/function-source.zip
+createTime: '2026-05-19T11:32:38.811024415Z'
+environment: GEN_2
+eventTrigger:
+  eventType: google.cloud.pubsub.topic.v1.messagePublished
+  pubsubTopic: projects/ada2026-488110/topics/submission-graded
+  retryPolicy: RETRY_POLICY_DO_NOT_RETRY
+  serviceAccountEmail: 479923065661-compute@developer.gserviceaccount.com
+  trigger: projects/ada2026-488110/locations/us-central1/triggers/profile-update-function-911983
+  triggerRegion: us-central1
+labels:
+  deployment-tool: cli-gcloud
+name: projects/ada2026-488110/locations/us-central1/functions/profile_update_function
+satisfiesPzi: true
+serviceConfig:
+  allTrafficOnLatestRevision: true
+  availableCpu: '0.1666'
+  availableMemory: 256M
+  environmentVariables:
+    FIRESTORE_DATABASE: (default)
+    LOG_EXECUTION_ID: 'true'
+    PROJECT_ID: ada2026-488110
+    REGION: us-central1
+  ingressSettings: ALLOW_ALL
+  maxInstanceRequestConcurrency: 1
+  revision: profile-update-function-00001-mib
+  service: projects/ada2026-488110/locations/us-central1/services/profile-update-function
+  serviceAccountEmail: 479923065661-compute@developer.gserviceaccount.com
+  timeoutSeconds: 60
+  uri: https://profile-update-function-p2nkxa42qa-uc.a.run.app
+state: ACTIVE
+updateTime: '2026-05-19T11:33:57.521050413Z'
+url: https://us-central1-ada2026-488110.cloudfunctions.net/profile_update_function
+Deploying function: notification_function...
+Preparing function...
+...done.
+Deploying function...
+[Build]..................................................................................................................................................................................................................................................................................................................................................................................................................................done
+[Service]............................................................................done
+[Trigger]............................................................done
+Done.
+You can view your function in the Cloud Console here: https://console.cloud.google.com/functions/details/us-central1/notification_function?project=ada2026-488110
+
+buildConfig:
+  automaticUpdatePolicy: {}
+  build: projects/479923065661/locations/us-central1/builds/ba53aa6a-1f46-4f6e-8b90-05d30efc6369
+  dockerRegistry: ARTIFACT_REGISTRY
+  dockerRepository: projects/ada2026-488110/locations/us-central1/repositories/gcf-artifacts
+  entryPoint: on_submission_graded
+  runtime: python311
+  serviceAccount: projects/ada2026-488110/serviceAccounts/479923065661-compute@developer.gserviceaccount.com
+  source:
+    storageSource:
+      bucket: gcf-v2-sources-479923065661-us-central1
+      generation: '1779190471908542'
+      object: notification_function/function-source.zip
+  sourceProvenance:
+    resolvedStorageSource:
+      bucket: gcf-v2-sources-479923065661-us-central1
+      generation: '1779190471908542'
+      object: notification_function/function-source.zip
+createTime: '2026-05-19T11:34:32.163231587Z'
+environment: GEN_2
+eventTrigger:
+  eventType: google.cloud.pubsub.topic.v1.messagePublished
+  pubsubTopic: projects/ada2026-488110/topics/submission-graded
+  retryPolicy: RETRY_POLICY_DO_NOT_RETRY
+  serviceAccountEmail: 479923065661-compute@developer.gserviceaccount.com
+  trigger: projects/ada2026-488110/locations/us-central1/triggers/notification-function-876167
+  triggerRegion: us-central1
+labels:
+  deployment-tool: cli-gcloud
+name: projects/ada2026-488110/locations/us-central1/functions/notification_function
+satisfiesPzi: true
+serviceConfig:
+  allTrafficOnLatestRevision: true
+  availableCpu: '0.1666'
+  availableMemory: 256M
+  environmentVariables:
+    FIRESTORE_DATABASE: (default)
+    LOG_EXECUTION_ID: 'true'
+    PROJECT_ID: ada2026-488110
+    REGION: us-central1
+  ingressSettings: ALLOW_ALL
+  maxInstanceRequestConcurrency: 1
+  revision: notification-function-00001-xim
+  service: projects/ada2026-488110/locations/us-central1/services/notification-function
+  serviceAccountEmail: 479923065661-compute@developer.gserviceaccount.com
+  timeoutSeconds: 60
+  uri: https://notification-function-p2nkxa42qa-uc.a.run.app
+state: ACTIVE
+updateTime: '2026-05-19T11:35:26.730496684Z'
+url: https://us-central1-ada2026-488110.cloudfunctions.net/notification_function
+Cloud Functions deployed.
+Creating Pub/Sub push subscription for auto-grading-agent...
+Creating subscription auto-grading-agent-sub...
+Created subscription [projects/ada2026-488110/subscriptions/auto-grading-agent-sub].
+Pub/Sub push subscription created/updated.
+Deploying Google Workflow: demo_learning_flow...
+Waiting for operation [operation-1779190545464-6522a14733e9f-f1e92e2d-15238d26] to complete...
+........done.
+createTime: '2026-05-18T11:43:52.758471900Z'
+name: projects/ada2026-488110/locations/us-central1/workflows/demo_learning_flow
+revisionCreateTime: '2026-05-19T11:35:45.807581067Z'
+revisionId: 000002-edd
+serviceAccount: projects/ada2026-488110/serviceAccounts/479923065661-compute@developer.gserviceaccount.com
+sourceContents: |
+  main:
+    params: [args]
+    steps:
+      - init:
+          assign:
+            - learner_id: ${default(map.get(args, "learner_id"), "demo-learner-123")}
+            - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+            - region: ${sys.get_env("GOOGLE_CLOUD_LOCATION")}
+            - course_service_url: ${args.course_service_url}
+            - assessment_service_url: ${args.assessment_service_url}
+            - learning_profile_service_url: ${args.learning_profile_service_url}
+            - auto_grading_agent_url: ${args.auto_grading_agent_url}
+            - recommender_agent_url: ${args.recommender_agent_url}
+
+      - create_course:
+          call: http.post
+          args:
+            url: ${course_service_url + "/courses"}
+            body:
+              title: "Introduction to Data Architecture"
+              description: "Learn about EDA, microservices, and data products."
+              learning_objectives: ["Understand event-driven architecture", "Understand microservices", "Understand data products"]
+          result: course_res
+
+      - add_module:
+          call: http.post
+          args:
+            url: ${course_service_url + "/courses/" + course_res.body.course_id + "/modules"}
+            body:
+              title: "Event-Driven Microservices"
+              learning_objectives: ["Explain Pub/Sub choreography", "Explain service boundaries"]
+              order: 1
+          result: module_res
+
+      - add_material:
+          call: http.post
+          args:
+            url: ${course_service_url + "/courses/" + course_res.body.course_id + "/materials"}
+            body:
+              module_id: ${module_res.body.module_id}
+              title: "Pub/Sub and Choreography Basics"
+              type: "reading"
+              concepts: ["pubsub", "choreography", "event-driven architecture"]
+              order: 1
+          result: material_res
+
+      - create_assignment:
+          call: http.post
+          args:
+            url: ${assessment_service_url + "/assignments"}
+            body:
+              course_id: ${course_res.body.course_id}
+              title: "Explain Event-Driven Architecture"
+              instructions: "Explain how services communicate using events and why this improves loose coupling."
+              rubric:
+                - name: "Event communication"
+                  max_points: 40
+                  keywords: ["event", "publish", "subscribe", "pubsub", "message"]
+                  concepts: ["pubsub", "event-driven architecture"]
+                - name: "Loose coupling"
+                  max_points: 40
+                  keywords: ["loose coupling", "independent", "asynchronous", "decoupled"]
+                  concepts: ["choreography", "microservices"]
+                - name: "Reliability"
+                  max_points: 20
+                  keywords: ["retry", "failure", "resilience", "eventual consistency"]
+                  concepts: ["resilience"]
+          result: assignment_res
+
+      - submit_answer:
+          call: http.post
+          args:
+            url: ${assessment_service_url + "/submissions"}
+            body:
+              assignment_id: ${assignment_res.body.assignment_id}
+              learner_id: ${learner_id}
+              answer_text: "In an event-driven architecture, services publish events when something important happens. Other services subscribe to those messages through a Pub/Sub system. This means the sender does not need to know who receives the event. The services become more independent and decoupled. Communication is asynchronous, so one service can continue even if another service is temporarily unavailable. This improves loose coupling and supports microservices. With retries and eventual consistency, the system can also become more resilient to failure."
+          result: submission_res
+
+      - trigger_grading:
+          call: http.post
+          args:
+            url: ${auto_grading_agent_url + "/agent/grade-submission"}
+            body:
+              submission_id: ${submission_res.body.submission_id}
+          result: grading_trigger_res
+
+      - poll_grade:
+          assign:
+            - attempts: 0
+            - max_attempts: 10
+            - grade: null
+      - check_grade:
+          switch:
+            - condition: ${attempts < max_attempts}
+              steps:
+                - get_grade:
+                    try:
+                      call: http.get
+                      args:
+                        url: ${assessment_service_url + "/submissions/" + submission_res.body.submission_id + "/grade"}
+                      result: grade_res
+                    retry:
+                      predicate: ${http.default_retry_predicate}
+                      max_retries: 5
+                      backoff:
+                        initial_delay: 1
+                        max_delay: 5
+                        multiplier: 2
+                - set_grade:
+                    assign:
+                      - grade: ${grade_res.body}
+                - grade_exists:
+                    switch:
+                      - condition: ${grade != null and grade.grade_id != null}
+                        next: get_profile
+                - wait_and_retry:
+                    call: sys.sleep
+                    args:
+                      seconds: 3
+                - increment_attempts:
+                    assign:
+                      - attempts: ${attempts + 1}
+                    next: check_grade
+            - condition: true
+              next: get_profile
+
+      - get_profile:
+          call: http.get
+          args:
+            url: ${learning_profile_service_url + "/profiles/" + learner_id}
+          result: profile_res
+
+      - get_recommendation:
+          call: http.post
+          args:
+            url: ${recommender_agent_url + "/agent/recommend"}
+            body:
+              learner_id: ${learner_id}
+              course_id: ${course_res.body.course_id}
+          result: recommendation_res
+
+      - return_result:
+          return:
+            course: ${course_res.body}
+            module: ${module_res.body}
+            material: ${material_res.body}
+            assignment: ${assignment_res.body}
+            submission: ${submission_res.body}
+            grade: ${grade}
+            learner_profile: ${profile_res.body}
+            recommendation: ${recommendation_res.body}
+state: ACTIVE
+updateTime: '2026-05-19T11:35:46.120465658Z'
+Google Workflow deployed.
+Deploying Google API Gateway...
+Ensuring API Gateway resource exists...
+Waiting for API [learnsphere-gateway] to be created...
+............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................done.
+Fetching backend URLs...
+Creating API Config...
+Waiting for API Config [learnsphere-config-1779190548] to be created for API [learnsphere-gateway]...
+..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................done.
+Creating/Updating Gateway...
+Waiting for API Gateway [learnsphere-gateway] to be created with [projects/ada2026-488110/locations/global/apis/learnsphere-gateway/configs/learnsphere-config-1779190548] config...
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................done.
+API Gateway deployed at: https://learnsphere-gateway-64h1svgd.uc.gateway.dev
+Updating frontend with Gateway URL...
+Deploying container to Cloud Run service [[1mfrontend[m] in project [[1mada2026-488110[m] region [[1mus-central1[m]
+Deploying...
+Creating Revision..............................................done
+Routing traffic.....done
+Done.
+Service [[1mfrontend[m] revision [[1mfrontend-00002-4sv[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://frontend-479923065661.us-central1.run.app[m
+Deployment complete.
+Fetching service URLs...
+Updating Cloud Run services with real URLs...
+Updating course-service...
+Deploying...
+Creating Revision.................................................................................................................................................................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mcourse-service[m] revision [[1mcourse-service-00003-pkv[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://course-service-479923065661.us-central1.run.app[m
+Updating assessment-service...
+Deploying...
+Creating Revision..............................................................................................done
+Routing traffic.....done
+Done.
+Service [[1massessment-service[m] revision [[1massessment-service-00003-gp9[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://assessment-service-479923065661.us-central1.run.app[m
+Updating learning-profile-service...
+Deploying...
+Creating Revision.............................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mlearning-profile-service[m] revision [[1mlearning-profile-service-00003-vfd[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://learning-profile-service-479923065661.us-central1.run.app[m
+Updating auto-grading-agent...
+Deploying...
+Creating Revision.............................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mauto-grading-agent[m] revision [[1mauto-grading-agent-00002-dxz[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://auto-grading-agent-479923065661.us-central1.run.app[m
+Updating recommender-agent...
+Deploying...
+Creating Revision.......................................................................................................................................................................................................................................................................done
+Routing traffic.....done
+Done.
+Service [[1mrecommender-agent[m] revision [[1mrecommender-agent-00002-lp2[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://recommender-agent-479923065661.us-central1.run.app[m
+Updating assessment-mcp-server...
+Deploying...
+Creating Revision....................................................................done
+Routing traffic.....done
+Done.
+Service [[1massessment-mcp-server[m] revision [[1massessment-mcp-server-00002-dm8[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://assessment-mcp-server-479923065661.us-central1.run.app[m
+Updating learning-course-mcp-server...
+Deploying...
+Creating Revision.........................................................................done
+Routing traffic.....done
+Done.
+Service [[1mlearning-course-mcp-server[m] revision [[1mlearning-course-mcp-server-00002-ssn[m] has been deployed and is serving [1m100[m percent of traffic.
+Service URL: [1mhttps://learning-course-mcp-server-479923065661.us-central1.run.app[m
+URLs updated successfully.
+Full deployment complete!

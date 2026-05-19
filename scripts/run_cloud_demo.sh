@@ -23,6 +23,7 @@ COURSE_RES=$(curl -s -X POST "${API_GATEWAY_URL}/api/courses" \
   -H "Content-Type: application/json" \
   -H "$AUTH_HEADER" \
   -d '{
+    "name": "Course DA",
     "title": "Introduction to Data Architecture",
     "description": "Learn about EDA, microservices, and data products.",
     "learning_objectives": ["Understand event-driven architecture", "Understand microservices", "Understand data products"]
@@ -37,6 +38,7 @@ MODULE_RES=$(curl -s -X POST "${API_GATEWAY_URL}/api/courses/${COURSE_ID}/module
   -H "$AUTH_HEADER" \
   -d "{
     \"course_id\": \"$COURSE_ID\",
+    \"name\": \"Module EDA\",
     \"title\": \"Event-Driven Microservices\",
     \"learning_objectives\": [\"Explain Pub/Sub choreography\", \"Explain service boundaries\"],
     \"order\": 1
@@ -52,6 +54,7 @@ curl -s -X POST "${API_GATEWAY_URL}/api/courses/${COURSE_ID}/materials" \
   -d "{
     \"course_id\": \"$COURSE_ID\",
     \"module_id\": \"$MODULE_ID\",
+    \"name\": \"Material Basics\",
     \"title\": \"Pub/Sub and Choreography Basics\",
     \"type\": \"reading\",
     \"concepts\": [\"pubsub\", \"choreography\", \"event-driven architecture\"],
@@ -65,6 +68,7 @@ ASSIGNMENT_RES=$(curl -s -X POST "${API_GATEWAY_URL}/api/assignments" \
   -H "$AUTH_HEADER" \
   -d "{
     \"course_id\": \"$COURSE_ID\",
+    \"name\": \"Assignment EDA\",
     \"title\": \"Explain Event-Driven Architecture\",
     \"instructions\": \"Explain how services communicate using events and why this improves loose coupling.\",
     \"rubric\": [
