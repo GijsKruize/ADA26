@@ -202,7 +202,13 @@ To trigger the orchestrated demo flow in Google Workflows:
 2.  Run `./scripts/call_workflow.sh`.
 3.  The script will trigger the workflow and wait for the final JSON result, which consolidates all created resources and grading results.
 
-## 18. Assumptions
+## 18. Teardown instructions
+
+To completely remove all deployed resources from Google Cloud and avoid ongoing costs:
+1.  Run `./cleanup_all.sh`.
+2.  The script will systematically delete the API Gateway, Workflows, Cloud Run services, Cloud Functions, Pub/Sub resources, Cloud Storage buckets, and Artifact Registry repositories.
+
+## 19. Assumptions
 
 -   **Security:** `DEMO_API_TOKEN` is a static token for demo purposes. In production, this would be replaced by Identity Platform (Firebase Auth).
 -   **Identity:** `X-Demo-User` header is used to simulate different learners without a full auth provider.
@@ -210,13 +216,13 @@ To trigger the orchestrated demo flow in Google Workflows:
 -   **LLM Availability:** The system assumes Ollama might be unavailable and provides a robust deterministic fallback based on keyword matching and length heuristics.
 -   **MCP Protocol:** The MCP servers use a custom HTTP REST protocol (`POST /tools/execute`) for simplicity rather than the standard JSON-RPC MCP wire protocol.
 
-## 19. Known limitations
+## 20. Known limitations
 
 -   **Manual Grading:** The system is focused on auto-grading; manual override workflows are defined in the API but not implemented in the frontend demo.
 -   **Storage:** While Cloud Storage is provisioned, files are currently passed as base64 or text for demo simplicity in the `run_local_demo` scripts.
 -   **LLM Latency:** LLM grading via Ollama can take several seconds; the system uses a push-based asynchronous model to handle this gracefully.
 
-## 20. Troubleshooting
+## 21. Troubleshooting
 
 -   **Grading Stuck:** Check the `auto-grading-agent` logs. If Ollama is timing out, the circuit breaker should trigger the deterministic fallback.
 -   **Profile Not Updating:** Verify that the `SubmissionGraded` event was published and check the `profile-update-function` logs for idempotency skips.

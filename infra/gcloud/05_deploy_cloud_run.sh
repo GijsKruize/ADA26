@@ -46,9 +46,12 @@ for SERVICE in "${SERVICES[@]}"; do
       gcloud builds submit "$CONTEXT" --tag "$IMAGE" --project="${PROJECT_ID}"
     fi
   else
-    # Submit the build from the project root but point to the specific Dockerfile
-    # This allows Cloud Build to see the shared/ directory without local file moves
-    gcloud builds submit . --tag "$IMAGE" --project="${PROJECT_ID}" --dockerfile="$CONTEXT/Dockerfile"
+    # Copy Dockerfile to root temporarily to allow Cloud Build to see shared/
+    # Using a unique temp name to avoid collisions, but gcloud builds submit
+    # specifically looks for 'Dockerfile' in the context root.
+    cp "$CONTEXT/Dockerfile" ./Dockerfile
+    gcloud builds submit . --tag "$IMAGE" --project="${PROJECT_ID}"
+    rm ./Dockerfile
   fi
 done
 
