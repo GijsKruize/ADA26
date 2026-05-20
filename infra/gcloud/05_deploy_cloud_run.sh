@@ -72,11 +72,12 @@ OLLAMA_URL=$(gcloud run services describe ollama --region "${REGION}" --project 
 
 # 2. Deploy AI Proxy
 echo "Deploying ai-proxy..."
+OLLAMA_HOST=$(echo $OLLAMA_URL | sed -e 's|^https://||')
 gcloud run deploy ai-proxy \
   --image "${IMAGE_BASE}/ai-proxy:latest" \
   --region "${REGION}" \
   --project "${PROJECT_ID}" \
-  --set-env-vars "OLLAMA_URL=${OLLAMA_URL}" \
+  --set-env-vars "OLLAMA_URL=${OLLAMA_URL},OLLAMA_HOST_HEADER=${OLLAMA_HOST}" \
   --allow-unauthenticated
 
 AI_PROXY_URL=$(gcloud run services describe ai-proxy --region "${REGION}" --project "${PROJECT_ID}" --format='value(status.url)')

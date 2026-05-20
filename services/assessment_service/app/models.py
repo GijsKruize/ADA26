@@ -23,6 +23,7 @@ class Submission(BaseModel):
     submission_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     assignment_id: str
     learner_id: str
+    learner_email: Optional[str] = "demo@example.com"
     answer_text: str
     file_url: Optional[str] = None
     status: str = "submitted"  # submitted|graded|manual_review
@@ -40,6 +41,7 @@ class Grade(BaseModel):
     assignment_id: str
     course_id: str
     learner_id: str
+    learner_email: Optional[str] = "demo@example.com"
     score: float
     max_score: int
     feedback: str

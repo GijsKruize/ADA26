@@ -45,7 +45,7 @@ async def handle_grade_submission(request: GradeSubmissionRequest, background_ta
         logger.error(f"Error grading submission {request.submission_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/pubsub/submission-created")
+@app.post("/pubsub/submission-created")
 async def handle_submission_created_push(request: Request, background_tasks: BackgroundTasks):
     """
     Endpoint for Google Cloud Pub/Sub Push subscriptions.
@@ -65,7 +65,9 @@ async def handle_submission_created_push(request: Request, background_tasks: Bac
         
         logger.info(f"Received event: {event.get('event_type')}")
         
-        if event.get("event_type") == "submission.created":
+        # Check for both camelCase and snake_case or whatever the producer uses
+        event_type = event.get("event_type", "").lower()
+        if event_type in ["submissioncreated", "submission-created", "submission_created"]:
             submission_id = event["payload"].get("submission_id")
             if submission_id:
                 logger.info(f"Triggering background grading for submission: {submission_id}")
@@ -80,9 +82,6 @@ async def handle_submission_created_push(request: Request, background_tasks: Bac
             
     except Exception as e:
         logger.error(f"Error processing Pub/Sub message: {e}")
-        # Return 200/202 to avoid Pub/Sub retrying indefinitely if it's a permanent error, 
-        # but here it might be better to return 500 if we want a retry.
-        # Given this is an assignment, let's just log and return 200 to acknowledge.
         return {"status": "error", "detail": str(e)}
 
 app.include_router(router)

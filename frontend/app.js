@@ -17,7 +17,9 @@ function getLearnerName() {
     return document.getElementById('learner-name').value;
 }
 
-const DEMO_TOKEN = 'demo-token-123'; // Matches Settings.DEMO_API_TOKEN
+function getLearnerEmail() {
+    return document.getElementById('learner-email').value;
+}
 
 async function callApi(path, method = 'GET', body = null) {
     const url = `${API_BASE}${path}`;
@@ -165,30 +167,55 @@ document.getElementById('btn-create-assignment').onclick = async () => {
 // Step 2.1: Submit Answer
 document.getElementById('btn-submit-answer').onclick = async () => {
     try {
-        setStatus('submission-status', 'Submitting...');
+        setStatus('submission-status', 'Submitting (this triggers auto-grading)...');
         const data = await callApi('/api/submissions', 'POST', {
             assignment_id: state.assignment_id,
             learner_id: getLearnerId(),
+            learner_email: getLearnerEmail(),
             answer_text: document.getElementById('answer-text').value
         });
         state.submission_id = data.submission_id;
-        setStatus('submission-status', 'Success!', 'success');
+        setStatus('submission-status', 'Success! Grading triggered automatically.', 'success');
         document.getElementById('btn-trigger-grading').disabled = false;
     } catch (e) {
         setStatus('submission-status', e.message, 'error');
     }
 };
 
-// Step 3: Trigger Grading
+// Step 3: Fetch Grade Result (Polling)
 document.getElementById('btn-trigger-grading').onclick = async () => {
     try {
-        setStatus('grading-status', 'Grading...');
-        const data = await callApi('/api/agent/grade-submission', 'POST', {
-            submission_id: state.submission_id
-        });
-        displayResult('grade-result', data);
-        setStatus('grading-status', 'Success!', 'success');
-        document.getElementById('btn-fetch-profile').disabled = false;
+        setStatus('grading-status', 'Polling for LLM grade (Ollama is thinking)...');
+        
+        let attempts = 0;
+        const maxAttempts = 20; // Increase polling time for slower LLMs
+        const delay = 5000; // 5 seconds
+
+        while (attempts < maxAttempts) {
+            try {
+                const data = await callApi(`/api/submissions/${state.submission_id}/grade`);
+                displayResult('grade-result', data);
+                
+                const provider = data.trace && data.trace.llm_provider ? data.trace.llm_provider : 'unknown';
+                if (provider === 'deterministic-fallback') {
+                    setStatus('grading-status', 'Warning: Fallback used. Ollama might still be loading or timed out.', 'error');
+                } else {
+                    setStatus('grading-status', `Success! Graded by LLM (${provider})`, 'success');
+                }
+                
+                document.getElementById('btn-fetch-profile').disabled = false;
+                return;
+            } catch (e) {
+                if (e.message.includes('404')) {
+                    attempts++;
+                    setStatus('grading-status', `LLM is still grading... (attempt ${attempts}/${maxAttempts}, waiting 5s)`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new Error('LLM grading is taking longer than expected. Please wait another minute and click again.');
     } catch (e) {
         setStatus('grading-status', e.message, 'error');
     }

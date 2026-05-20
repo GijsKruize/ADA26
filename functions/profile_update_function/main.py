@@ -56,6 +56,7 @@ def on_submission_graded(cloud_event):
         # Initialize new profile if it doesn't exist
         profile_data = {
             "learner_id": learner_id,
+            "email": payload.get("learner_email", "demo@example.com"),
             "mastered_concepts": {},
             "weak_concepts": [],
             "grade_history": [],

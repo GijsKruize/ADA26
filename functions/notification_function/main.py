@@ -59,5 +59,27 @@ def on_submission_graded(cloud_event):
         "created_at": datetime.utcnow().isoformat()
     }
 
+    # Fetch learner's email for simulation
+    learner_email = payload.get("learner_email", "demo@example.com")
+    if learner_email == "demo@example.com":
+        try:
+            profile_ref = db.collection("learner_profiles").document(learner_id)
+            profile_doc = profile_ref.get()
+            if profile_doc.exists:
+                learner_email = profile_doc.to_dict().get("email", learner_email)
+        except Exception as e:
+            print(f"Error fetching learner email: {e}")
+
+    # Simulated Email Sending (using a very loud log entry)
+    print("=" * 60)
+    print(f"📧 SIMULATED EMAIL DELIVERY")
+    print(f"To: {learner_email}")
+    print(f"Subject: [LearnSphere] Submission Graded: {assignment_id}")
+    print(f"Message: Your submission for assignment {assignment_id} has been graded.")
+    print(f"Score: {score}/{max_score}")
+    print(f"Feedback: {feedback}")
+    print(f"View full results at: https://frontend-479923065661.us-central1.run.app")
+    print("=" * 60)
+
     notification_ref.set(notification_data)
     print(f"Created notification for learner {learner_id} from event {event_id}")

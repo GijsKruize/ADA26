@@ -12,6 +12,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -33,6 +34,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/courses/{course_id}:
     parameters:
@@ -45,6 +47,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -66,6 +69,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/courses/{course_id}/modules:
     parameters:
@@ -78,6 +82,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -89,6 +94,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -110,6 +116,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/courses/{course_id}/materials:
     parameters:
@@ -122,6 +129,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -133,6 +141,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -154,6 +163,7 @@ paths:
       x-google-backend:
         address: "COURSE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/assignments:
     post:
@@ -161,6 +171,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -182,6 +193,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/assignments/{assignment_id}:
     parameters:
@@ -194,6 +206,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -215,6 +228,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/submissions:
     post:
@@ -222,6 +236,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -243,6 +258,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/submissions/{submission_id}:
     parameters:
@@ -255,6 +271,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -276,6 +293,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/submissions/{submission_id}/grade:
     parameters:
@@ -288,6 +306,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -309,6 +328,7 @@ paths:
       x-google-backend:
         address: "ASSESSMENT_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/profiles/{learner_id}:
     parameters:
@@ -321,6 +341,7 @@ paths:
       x-google-backend:
         address: "LEARNING_PROFILE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -342,6 +363,7 @@ paths:
       x-google-backend:
         address: "LEARNING_PROFILE_SERVICE_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/agent/recommend:
     post:
@@ -349,6 +371,7 @@ paths:
       x-google-backend:
         address: "RECOMMENDER_AGENT_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -370,6 +393,7 @@ paths:
       x-google-backend:
         address: "RECOMMENDER_AGENT_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
 
   /api/agent/grade-submission:
     post:
@@ -377,6 +401,7 @@ paths:
       x-google-backend:
         address: "AUTO_GRADING_AGENT_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0
       responses:
         200:
           description: "OK"
@@ -398,3 +423,4 @@ paths:
       x-google-backend:
         address: "AUTO_GRADING_AGENT_URL/"
         path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 120.0

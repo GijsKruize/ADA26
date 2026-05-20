@@ -20,7 +20,7 @@ def call_ollama(prompt: str, model: str = None) -> str:
     }
     
     try:
-        response = requests.post(url, json=payload, timeout=10)
+        response = requests.post(url, json=payload, timeout=90)
         response.raise_for_status()
         result = response.json()
         return result.get("response", "")

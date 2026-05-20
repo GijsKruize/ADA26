@@ -36,7 +36,7 @@ def get_assignment(assignment_id: str):
 @router.post("/submissions", response_model=Submission)
 def create_submission(submission: Submission):
     res = repository.create_submission(submission)
-    events.publish_submission_created(res.submission_id, res.assignment_id, res.learner_id)
+    events.publish_submission_created(res.submission_id, res.assignment_id, res.learner_id, res.learner_email)
     return res
 
 @router.get("/submissions/{submission_id}", response_model=Submission)
@@ -67,7 +67,8 @@ def record_grade(submission_id: str, grade: Grade):
         max_score=res.max_score,
         feedback=res.feedback,
         weak_concepts=res.weak_concepts,
-        mastered_concepts=res.mastered_concepts
+        mastered_concepts=res.mastered_concepts,
+        learner_email=res.learner_email
     )
     return res
 
